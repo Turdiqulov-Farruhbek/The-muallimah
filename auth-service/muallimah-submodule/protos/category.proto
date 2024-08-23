@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option go_package = "/internal/pkg/genproto";
+
+import "muallimah-submodule/protos/common.proto";
+
+package protos;
+
+
+service CategoryService {
+    rpc CreateCategory(CategoryCreateReq) returns (Void);
+    rpc GetCategory(ById) returns (CategoryGetRes);
+    rpc UpdateCategory(CategoryUpdateReq) returns (Void);
+    rpc DeleteCategory(ById) returns (Void);
+    rpc ListCategories(CategoryListsReq) returns (CategoryListsRes);
+}
+
+message Category {
+    string id = 1;
+    string name = 2;
+}
+
+message CategoryCreateReq {
+    string name = 1;
+}
+
+
+message CategoryGetRes {
+    Category category = 1;
+}
+
+message CategoryUpt {
+    string name = 1;
+}
+
+message CategoryUpdateReq {
+    string id = 1;
+    CategoryUpt Body = 2;
+}
+
+message CategoryListsReq {
+    Pagination filter = 1; 
+}
+
+message CategoryListsRes {
+    repeated Category categories = 1;
+    Pagination pagination = 2;
+    int32 total_count = 3;
+}

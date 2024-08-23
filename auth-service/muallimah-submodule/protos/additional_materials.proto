@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option go_package = "/internal/pkg/genproto";
+
+package protos;
+
+import "muallimah-submodule/protos/common.proto";
+
+
+service MaterialService {
+    rpc CreateMaterial(MaterialCreateReq) returns (Void);
+    rpc GetMaterial(ById) returns (MaterialGetRes);
+    rpc UpdateMaterial(MaterialUpdateReq) returns (Void);
+    rpc DeleteMaterial(ById) returns (Void);
+    rpc ListMaterials(MaterialListReq) returns (MaterialListRes);
+}
+
+message MaterialCreateReq {
+    string lesson_id = 1;
+    string resource_url = 2;
+    string title = 3;
+    string description = 4;
+}
+
+message MaterialGetRes {
+    string id = 1;
+    string lesson_id = 2;
+    string resource_url = 3;
+    string title = 4;
+    string description = 5;
+}
+
+message MaterialUpdate {
+    string resource_url = 1;
+    string title = 2;
+    string description = 3;
+}
+
+message MaterialUpdateReq {
+    string id = 1;
+    MaterialUpdate body = 2;
+}
+
+message MaterialListReq {
+    string lesson_id = 1;
+    Pagination pagination = 3;
+}
+
+message MaterialListRes {
+    repeated MaterialGetRes materials = 1;
+}

@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+option go_package = "/internal/pkg/genproto";
+
+import "muallimah-submodule/protos/common.proto";
+import "muallimah-submodule/protos/users_course.proto";
+
+package protos;
+
+service UserLessonService {
+    rpc CreateUserLesson(UserLessonCreateReq) returns (Void);
+    rpc GetUserLesson(UserLessonGetReq) returns (UserLessonGetRes);
+    rpc UpdateUserLesson(UserLessonUpdateReq) returns (Void);
+    rpc DeleteUserLesson(UserLessonDeleteReq) returns (Void);
+    rpc ListUserLessons(UserLessonListsReq) returns (UserLessonListsRes);
+}
+
+message UserLesson {
+    string id = 1;
+    string lesson_id = 2;
+    UserCourse user_course_id = 3;
+    string status = 4;  // Enum type: progress_status_type
+}
+
+message UserLessonCreateReq {
+    string lesson_id = 1;
+    string user_course_id = 2;
+    string status = 3;
+}
+
+message UserLessonGetReq {
+    string id = 1;
+}
+
+message UserLessonGetRes {
+    UserLesson user_lesson = 1;
+}
+
+message UserLessonUpdateReq {
+    string id = 1;
+    UserUptbody body = 2;
+}
+
+message UserUptbody {
+    string status = 1;
+}
+
+message UserLessonDeleteReq {
+    string id = 1;
+}
+
+message UserLessonListsReq {
+    string user_course_id = 1;
+    Pagination filter = 2; 
+}
+
+message UserLessonListsRes {
+    repeated UserLesson user_lessons = 1;
+    Pagination pagination = 2;
+    int32 total_count = 3;
+}
+
