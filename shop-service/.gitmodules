@@ -1,0 +1,3 @@
+[submodule "muallimah-submodule"]
+	path = muallimah-submodule
+	url = https://gitlab.com/acumen5524834/muallimah-submodule.git
