@@ -23,7 +23,7 @@ func Server(cfg *config.Config, stg *repo.Storage) {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Server is running on ", cfg.AUTH_GRPC_PORT)
+	fmt.Println("gRPC server is running on port ", cfg.AUTH_GRPC_PORT)
 	err = newServer.Serve(lis)
 	if err != nil {
 		log.Fatal(err)

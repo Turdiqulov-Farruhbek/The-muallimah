@@ -20,7 +20,7 @@ services:
     volumes:
       - ./migrations:/migrations
     command: [ "-path", "/migrations", "-database",  
-                "postgres://postgres:root@delivery_auth:5432/delivery_auth_db?sslmode=disable", 
+                "postgres://postgres:root@delivery_auth:5432/delivery_auth?sslmode=disable", 
                 "up" ]
     depends_on:
       - postgres-db
@@ -32,7 +32,7 @@ services:
       PGUSER: postgres
       POSTGRES_PASSWORD: root
       # PGDATA: /data/postgres
-      POSTGRES_DB: delivery_auth_db
+      POSTGRES_DB: delivery_auth
     volumes:
       - db:/post-database/post-memory
     ports:

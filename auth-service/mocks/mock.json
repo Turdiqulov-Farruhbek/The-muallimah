@@ -1,0 +1,13 @@
+[
+    {
+        "first_name": "Azizbek",
+        "last_name": "Qodirov",
+        "gender": "male",
+        "address": "Tashkent",
+        "phone_number": "+998123456789",
+        "dob": "2024-12-31",
+        "occupation": "IT Professional",
+        "email": "qodirovazizbek249@gmail.com",
+        "password": "#Password7777"
+    }
+]

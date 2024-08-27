@@ -11,10 +11,12 @@ service UserService {
     rpc CreateUser(UserCreateReq) returns (Void);
     rpc GetUserByID(ById) returns (UserGetRes);
     rpc GetUserByEmail(ByEmail) returns (UserGetRes);
+    rpc GetUserSecurityByEmail(ByEmail) returns (UserSecurityRes);
     rpc UpdateUser(UserUpdateReq) returns (Void);
     rpc ChangeUserPassword(UserChangePasswordReq) returns (Void);
+    rpc ChangeUserPFP(UserChangePFPReq) returns (Void);
     rpc IsEmailExists(UserEmailCheckReq) returns (UserEmailCheckRes);
-    // rpc ChangeUserEmail(UserEmailReq) returns (Void);
+    rpc ConfirmUser(ByEmail) returns (Void);
     rpc DeleteUser(ById) returns (Void);
     rpc ListUsers(UsersGetAllReq) returns (UsersGetAllRes);
 }
@@ -33,6 +35,27 @@ message UserCreateReq {
     string role = 11;
 }
 
+message UserCreateReqForSwagger {
+    string first_name = 1;
+    string last_name = 2;
+    string dob = 3;
+    string phone_number = 4;
+    string email = 5;
+    string occupation = 6;
+    string address = 7;
+    string password = 8;
+    string gender = 9;
+}
+
+message UserCreatePFPReq {
+    string id = 1;
+    string photo_url = 2;
+}
+
+message UserCreatePFPReqForSwagger {
+    string photo_url = 2;
+}
+
 message UserGetRes {
     string id = 1;
     string first_name = 2;
@@ -44,6 +67,7 @@ message UserGetRes {
     string address = 8;
     string gender = 9;
     string photo_url = 10;
+    bool is_confirmed = 12;
 }
 
 message UserUpdate {
@@ -62,14 +86,15 @@ message UserUpdateReq {
     UserUpdate body = 2;
 }
 
-message UserChangePassword {
-    string old_password = 1;
-    string new_password = 2;
+message UserChangePasswordReq {
+    string email = 1;
+    string code = 2;
+    string new_password = 3;
 }
 
-message UserChangePasswordReq {
-    string user_id = 1;
-    UserChangePassword body = 2;
+message UserChangePFPReq{
+    string email = 1;
+    string photo_url = 2;    
 }
 
 message UserGetAllFilter {
@@ -102,6 +127,24 @@ message UserEmailCheckRes {
     bool exists = 1;
 }
 
+message ConfirmUserReq {
+    string code = 1;
+    string email = 2;
+}
+
 message ByEmail {
     string email = 1;
+}
+
+message UserSecurityRes{
+    string id = 1;
+    string email = 2;
+    string password = 3;
+    string role = 4;
+    bool is_confirmed = 5;
+}
+
+message LoginReq {
+    string email = 1;
+    string password = 2;
 }

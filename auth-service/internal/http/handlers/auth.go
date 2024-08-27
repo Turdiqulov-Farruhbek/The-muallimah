@@ -3,18 +3,20 @@ package handlers
 import (
 	"auth-service/internal/http/token"
 	"auth-service/internal/pkg/config"
-	"auth-service/internal/pkg/genproto"
+	"fmt"
+	"os"
+	"path/filepath"
+	"time"
+
 	"context"
 	"net/http"
-
-	"auth-service/internal/pkg/models"
 
 	pb "auth-service/internal/pkg/genproto"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"github.com/minio/minio-go/v7"
 	"github.com/redis/go-redis/v9"
-	_ "github.com/swaggo/swag"
 )
 
 // Register godoc
@@ -23,8 +25,8 @@ import (
 // @Tags registration
 // @Accept json
 // @Produce json
-// @Param user body models.RegisterReqSwag true "User registration request"
-// @Success 201 {object} token.Tokens "JWT tokens"
+// @Param user body pb.UserCreateReqForSwagger true "User registration request"
+// @Success 201 {object} string "JWT tokens"
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 500 {object} string "Server error"
 // @Router /register [post]
@@ -34,16 +36,17 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Invalid request payload": err.Error()})
 		return
 	}
+	req.Role = "user"
 
 	if !config.IsValidEmail(req.Email) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email format"})
 		return
 	}
-	isEmailExists, err := h.US.IsEmailExists(c, &genproto.UserEmailCheckReq{Email: req.Email})
+	isEmailExists, err := h.US.IsEmailExists(c, &pb.UserEmailCheckReq{Email: req.Email})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't check email existance", "details": err.Error()})
 	}
-	if !isEmailExists.Exists {
+	if isEmailExists.Exists {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already registered"})
 		return
 	}
@@ -60,15 +63,15 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 
 	req.Password = string(hashedPassword)
 
-	_, err = h.US.CreateUser(c, &req)
+	err = config.SendConfirmationCode(req.Email)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error", "err": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code", "err": err.Error()})
 		return
 	}
 
-	err = h.SendConfirmationCode(req.Email)
+	_, err = h.US.CreateUser(c, &req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code", "err": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error", "err": err.Error()})
 		return
 	}
 
@@ -81,20 +84,21 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 // @Tags registration
 // @Accept json
 // @Produce json
-// @Param confirmation body models.ConfirmRegistrationReq true "Confirmation request"
+// @Param confirmation body pb.ConfirmUserReq true "Confirmation request"
 // @Success 200 {object} token.Tokens "JWT tokens"
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 401 {object} string "Incorrect verification code"
 // @Failure 404 {object} string "Verification code expired or email not found"
 // @Router /confirm-registration [post]
 func (h *HTTPHandler) ConfirmRegistration(c *gin.Context) {
-	var req models.ConfirmRegistrationReq
+	var req pb.ConfirmUserReq
+
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Invalid request payload": err.Error()})
 		return
 	}
 
-	storedCode, err := rdb.Get(context.Background(), req.Email).Result()
+	storedCode, err := h.RDB.Get(context.Background(), req.Email).Result()
 	if err == redis.Nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Verification code expired or email not found"})
 		return
@@ -108,7 +112,7 @@ func (h *HTTPHandler) ConfirmRegistration(c *gin.Context) {
 		return
 	}
 
-	err = h.US.ConfirmUser(&models.ConfirmUserReq{Email: req.Email})
+	_, err = h.US.ConfirmUser(c, &pb.ByEmail{Email: req.Email})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error confirming user", "details": err.Error()})
 		return
@@ -122,7 +126,7 @@ func (h *HTTPHandler) ConfirmRegistration(c *gin.Context) {
 
 	tokens := token.GenerateJWTToken(user.Id, user.Email, user.Role)
 
-	rdb.Del(context.Background(), req.Email)
+	h.RDB.Del(context.Background(), req.Email)
 
 	c.JSON(http.StatusOK, tokens)
 }
@@ -133,13 +137,13 @@ func (h *HTTPHandler) ConfirmRegistration(c *gin.Context) {
 // @Tags login
 // @Accept json
 // @Produce json
-// @Param credentials body models.LoginReq true "User login credentials"
+// @Param credentials body pb.LoginReq true "User login credentials"
 // @Success 200 {object} token.Tokens "JWT tokens"
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 401 {object} string "Invalid email or password"
 // @Router /login [post]
 func (h *HTTPHandler) Login(c *gin.Context) {
-	req := models.LoginReq{}
+	req := pb.LoginReq{}
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Invalid request payload": err.Error()})
 		return
@@ -157,7 +161,7 @@ func (h *HTTPHandler) Login(c *gin.Context) {
 	}
 
 	if !user.IsConfirmed {
-		err = h.SendConfirmationCode(req.Email)
+		err = config.SendConfirmationCode(req.Email)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code", "err": err.Error()})
 			return
@@ -178,7 +182,7 @@ func (h *HTTPHandler) Login(c *gin.Context) {
 // @Tags user
 // @Accept json
 // @Produce json
-// @Success 200 {object} models.GetProfileResp
+// @Success 200 {object} pb.UserGetRes
 // @Failure 401 {object} string "Unauthorized"
 // @Failure 404 {object} string "User not found"
 // @Failure 500 {object} string "Server error"
@@ -190,8 +194,9 @@ func (h *HTTPHandler) Profile(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
 	}
-
+	fmt.Println("claims", claims)
 	email := claims.(jwt.MapClaims)["email"].(string)
+	fmt.Println(email)
 	user, err := h.US.GetUserByEmail(c, &pb.ByEmail{Email: email})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"Server error": err.Error()})
@@ -206,9 +211,90 @@ func (h *HTTPHandler) Profile(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// SetProfilePicture godoc
+// @Summary Set a profile picture
+// @Description Adds a profile image to user.
+// @Tags product
+// @Accept multipart/mixed
+// @Produce json
+// @Param image formData file false "Profile image"
+// @Success 200 {object} string "Profile image is added"
+// @Failure 400 {object} string "Invalid request payload"
+// @Failure 500 {object} string "Server error"
+// @Security BearerAuth
+// @Router /set-pfp [post]
+func (h *HTTPHandler) SetPFP(c *gin.Context) {
+	wd, err := os.Getwd()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't get working directory", "details": err.Error()})
+		return
+	}
+
+	tempFolderPath := filepath.Join(wd, "temp/profile-pictures/")
+	file, err := c.FormFile("image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		return
+	}
+
+	if err = os.MkdirAll(tempFolderPath, 0755); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't create directory", "details": err.Error()})
+		return
+	}
+
+	filepath := fmt.Sprintf("%s%s", tempFolderPath, file.Filename)
+	err = c.SaveUploadedFile(file, filepath)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't save file", "details": err.Error()})
+		return
+	}
+
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header required"})
+		c.Abort()
+		return
+	}
+	claims, err := token.ExtractClaim(authHeader)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims", "details": err.Error()})
+		c.Abort()
+		return
+	}
+
+	email := claims["email"]
+
+	info, err := h.Minio.Client.FPutObject(
+		c,
+		h.Minio.DefaultBucket(),
+		fmt.Sprintf("pfp-%s", email),
+		tempFolderPath,
+		minio.PutObjectOptions{
+			ContentType: "image/jpeg",
+		},
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error", "err": err.Error()})
+		return
+	}
+	imgurl := fmt.Sprintf("http://localhost:9000/%s/%s", h.Minio.DefaultBucket(), info.Key)
+
+	_, err = h.US.ChangeUserPFP(c, &pb.UserChangePFPReq{Email: email.(string), PhotoUrl: imgurl})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't update pfp in database", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Profile image is added"})
+	go func() {
+		time.Sleep(60 * time.Second)
+		os.Remove(filepath)
+	}()
+}
+
 func (h *HTTPHandler) GetByID(c *gin.Context) {
-	id := &models.GetProfileByIdReq{ID: c.Param("id")}
-	user, err := h.US.GetUserByID(c, &pb.ById{Id: id.ID})
+	id := &pb.ById{Id: c.Param("id")}
+	user, err := h.US.GetUserByID(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"Couldn't get the user": err.Error()})
 		return

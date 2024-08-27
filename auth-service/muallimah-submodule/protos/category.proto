@@ -9,10 +9,10 @@ package protos;
 
 service CategoryService {
     rpc CreateCategory(CategoryCreateReq) returns (Void);
-    rpc GetCategory(ById) returns (CategoryGetRes);
+    rpc GetCategory(ById) returns (Category);
     rpc UpdateCategory(CategoryUpdateReq) returns (Void);
     rpc DeleteCategory(ById) returns (Void);
-    rpc ListCategories(CategoryListsReq) returns (CategoryListsRes);
+    rpc ListCategories(Pagination) returns (CategoryListRes);
 }
 
 message Category {
@@ -24,11 +24,6 @@ message CategoryCreateReq {
     string name = 1;
 }
 
-
-message CategoryGetRes {
-    Category category = 1;
-}
-
 message CategoryUpt {
     string name = 1;
 }
@@ -38,11 +33,7 @@ message CategoryUpdateReq {
     CategoryUpt Body = 2;
 }
 
-message CategoryListsReq {
-    Pagination filter = 1; 
-}
-
-message CategoryListsRes {
+message CategoryListRes {
     repeated Category categories = 1;
     Pagination pagination = 2;
     int32 total_count = 3;

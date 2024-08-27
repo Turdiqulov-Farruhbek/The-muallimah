@@ -62,3 +62,11 @@ func (u *UserService) IsEmailExists(ctx context.Context, req *pb.UserEmailCheckR
 func (u *UserService) GetUserSecurityByEmail(ctx context.Context, req *pb.ByEmail) (*pb.UserSecurityRes, error) {
 	return u.stg.User().GetUserSecurityByEmail(ctx, req)
 }
+
+func (u *UserService) ConfirmUser(ctx context.Context, req *pb.ByEmail) (*pb.Void, error) {
+	return u.stg.User().ConfirmUser(ctx, req)
+}
+
+func (u *UserService) ChangeUserPFP(ctx context.Context, req *pb.UserChangePFPReq) (*pb.Void, error) {
+	return u.stg.User().ChangeUserPFP(ctx, req)
+}

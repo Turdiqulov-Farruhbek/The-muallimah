@@ -227,3 +227,23 @@ func (u *UserManager) GetUserSecurityByEmail(ctx context.Context, req *pb.ByEmai
 	}
 	return &user, nil
 }
+
+func (u *UserManager) ConfirmUser(ctx context.Context, req *pb.ByEmail) (*pb.Void, error) {
+	query := `
+		UPDATE users SET is_confirmed = true WHERE email = $1 AND deleted_at=0
+	`
+	_, err := u.PgClient.ExecContext(ctx, query, req.Email)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func (u *UserManager) ChangeUserPFP(ctx context.Context, req *pb.UserChangePFPReq) (*pb.Void, error) {
+	query := `UPDATE users SET photo_url = $1 WHERE email = $2 AND deleted_at=0`
+	_, err := u.PgClient.ExecContext(ctx, query, req.PhotoUrl, req.Email)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}

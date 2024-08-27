@@ -25,7 +25,9 @@ const (
 	UserService_GetUserSecurityByEmail_FullMethodName = "/protos.UserService/GetUserSecurityByEmail"
 	UserService_UpdateUser_FullMethodName             = "/protos.UserService/UpdateUser"
 	UserService_ChangeUserPassword_FullMethodName     = "/protos.UserService/ChangeUserPassword"
+	UserService_ChangeUserPFP_FullMethodName          = "/protos.UserService/ChangeUserPFP"
 	UserService_IsEmailExists_FullMethodName          = "/protos.UserService/IsEmailExists"
+	UserService_ConfirmUser_FullMethodName            = "/protos.UserService/ConfirmUser"
 	UserService_DeleteUser_FullMethodName             = "/protos.UserService/DeleteUser"
 	UserService_ListUsers_FullMethodName              = "/protos.UserService/ListUsers"
 )
@@ -40,8 +42,9 @@ type UserServiceClient interface {
 	GetUserSecurityByEmail(ctx context.Context, in *ByEmail, opts ...grpc.CallOption) (*UserSecurityRes, error)
 	UpdateUser(ctx context.Context, in *UserUpdateReq, opts ...grpc.CallOption) (*Void, error)
 	ChangeUserPassword(ctx context.Context, in *UserChangePasswordReq, opts ...grpc.CallOption) (*Void, error)
+	ChangeUserPFP(ctx context.Context, in *UserChangePFPReq, opts ...grpc.CallOption) (*Void, error)
 	IsEmailExists(ctx context.Context, in *UserEmailCheckReq, opts ...grpc.CallOption) (*UserEmailCheckRes, error)
-	// rpc ChangeUserEmail(UserEmailReq) returns (Void);
+	ConfirmUser(ctx context.Context, in *ByEmail, opts ...grpc.CallOption) (*Void, error)
 	DeleteUser(ctx context.Context, in *ById, opts ...grpc.CallOption) (*Void, error)
 	ListUsers(ctx context.Context, in *UsersGetAllReq, opts ...grpc.CallOption) (*UsersGetAllRes, error)
 }
@@ -114,10 +117,30 @@ func (c *userServiceClient) ChangeUserPassword(ctx context.Context, in *UserChan
 	return out, nil
 }
 
+func (c *userServiceClient) ChangeUserPFP(ctx context.Context, in *UserChangePFPReq, opts ...grpc.CallOption) (*Void, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Void)
+	err := c.cc.Invoke(ctx, UserService_ChangeUserPFP_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) IsEmailExists(ctx context.Context, in *UserEmailCheckReq, opts ...grpc.CallOption) (*UserEmailCheckRes, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserEmailCheckRes)
 	err := c.cc.Invoke(ctx, UserService_IsEmailExists_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ConfirmUser(ctx context.Context, in *ByEmail, opts ...grpc.CallOption) (*Void, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Void)
+	err := c.cc.Invoke(ctx, UserService_ConfirmUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -154,8 +177,9 @@ type UserServiceServer interface {
 	GetUserSecurityByEmail(context.Context, *ByEmail) (*UserSecurityRes, error)
 	UpdateUser(context.Context, *UserUpdateReq) (*Void, error)
 	ChangeUserPassword(context.Context, *UserChangePasswordReq) (*Void, error)
+	ChangeUserPFP(context.Context, *UserChangePFPReq) (*Void, error)
 	IsEmailExists(context.Context, *UserEmailCheckReq) (*UserEmailCheckRes, error)
-	// rpc ChangeUserEmail(UserEmailReq) returns (Void);
+	ConfirmUser(context.Context, *ByEmail) (*Void, error)
 	DeleteUser(context.Context, *ById) (*Void, error)
 	ListUsers(context.Context, *UsersGetAllReq) (*UsersGetAllRes, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -183,8 +207,14 @@ func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UserUpdateReq
 func (UnimplementedUserServiceServer) ChangeUserPassword(context.Context, *UserChangePasswordReq) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeUserPassword not implemented")
 }
+func (UnimplementedUserServiceServer) ChangeUserPFP(context.Context, *UserChangePFPReq) (*Void, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeUserPFP not implemented")
+}
 func (UnimplementedUserServiceServer) IsEmailExists(context.Context, *UserEmailCheckReq) (*UserEmailCheckRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsEmailExists not implemented")
+}
+func (UnimplementedUserServiceServer) ConfirmUser(context.Context, *ByEmail) (*Void, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmUser not implemented")
 }
 func (UnimplementedUserServiceServer) DeleteUser(context.Context, *ById) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
@@ -313,6 +343,24 @@ func _UserService_ChangeUserPassword_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_ChangeUserPFP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserChangePFPReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ChangeUserPFP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ChangeUserPFP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ChangeUserPFP(ctx, req.(*UserChangePFPReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_IsEmailExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserEmailCheckReq)
 	if err := dec(in); err != nil {
@@ -327,6 +375,24 @@ func _UserService_IsEmailExists_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).IsEmailExists(ctx, req.(*UserEmailCheckReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ConfirmUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ByEmail)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ConfirmUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ConfirmUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ConfirmUser(ctx, req.(*ByEmail))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -399,8 +465,16 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_ChangeUserPassword_Handler,
 		},
 		{
+			MethodName: "ChangeUserPFP",
+			Handler:    _UserService_ChangeUserPFP_Handler,
+		},
+		{
 			MethodName: "IsEmailExists",
 			Handler:    _UserService_IsEmailExists_Handler,
+		},
+		{
+			MethodName: "ConfirmUser",
+			Handler:    _UserService_ConfirmUser_Handler,
 		},
 		{
 			MethodName: "DeleteUser",

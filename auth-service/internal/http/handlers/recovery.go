@@ -4,56 +4,11 @@ import (
 	"auth-service/internal/pkg/config"
 	pb "auth-service/internal/pkg/genproto"
 	"context"
-	"crypto/rand"
-	"fmt"
-	"math/big"
 	"net/http"
-	"time"
-
-	"auth-service/internal/pkg/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
-	"gopkg.in/gomail.v2"
 )
-
-var rdb = redis.NewClient(&redis.Options{
-	Addr: "localhost:6379",
-	DB:   0,
-})
-
-func (h *HTTPHandler) SendConfirmationCode(email string) error {
-	code, err := generateConfirmationCode()
-	if err != nil {
-		return err
-	}
-
-	m := gomail.NewMessage()
-	m.SetHeader("From", config.Load().SENDER_EMAIL)
-	m.SetHeader("To", email)
-	m.SetHeader("Subject", "Password Recovery Code")
-	m.SetBody("text/plain", fmt.Sprintf("Your password recovery code is: %d", code))
-
-	d := gomail.NewDialer("smtp.gmail.com", 587, config.Load().SENDER_EMAIL, config.Load().APP_PASSWORD)
-
-	if err := d.DialAndSend(m); err != nil {
-		return err
-	}
-
-	err = rdb.Set(context.Background(), email, code, 3*time.Minute).Err()
-	if err != nil {
-		return fmt.Errorf("server error storing confirmation code in Redis")
-	}
-	return nil
-}
-
-func generateConfirmationCode() (int, error) {
-	n, err := rand.Int(rand.Reader, big.NewInt(1000000))
-	if err != nil {
-		return 0, err
-	}
-	return int(n.Int64()), nil
-}
 
 // ForgotPassword godoc
 // @Summary Forgot passwrod
@@ -61,7 +16,7 @@ func generateConfirmationCode() (int, error) {
 // @Tags password-recovery
 // @Accept json
 // @Produce json
-// @Param credentials body models.ForgotPasswordReq true "User login credentials"
+// @Param credentials body pb.ByEmail true "User login credentials"
 // @Success 200 {object} string ""
 // @Failure 401 {object} string "Unauthorized"
 // @Failure 404 {object} string "Page not found"
@@ -69,7 +24,7 @@ func generateConfirmationCode() (int, error) {
 // @Security BearerAuth
 // @Router /forgot-password [POST]
 func (h *HTTPHandler) ForgotPassword(c *gin.Context) {
-	var req models.ForgotPasswordReq
+	var req pb.ByEmail
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Invalid request payload": err.Error()})
 		return
@@ -90,7 +45,7 @@ func (h *HTTPHandler) ForgotPassword(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
-	err = h.SendConfirmationCode(user.Email)
+	err = config.SendConfirmationCode(user.Email)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code to email", "err": err.Error()})
 		return
@@ -105,7 +60,7 @@ func (h *HTTPHandler) ForgotPassword(c *gin.Context) {
 // @Tags password-recovery
 // @Accept json
 // @Produce json
-// @Param request body models.RecoverPasswordReq true "Recover Password Request"
+// @Param request body pb.UserChangePasswordReq true "Recover Password Request"
 // @Success 200 {object} string "Password successfully updated"
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 401 {object} string "Incorrect verification code"
@@ -129,7 +84,7 @@ func (h *HTTPHandler) RecoverPassword(c *gin.Context) {
 		return
 	}
 
-	storedCode, err := rdb.Get(context.Background(), req.Email).Result()
+	storedCode, err := h.RDB.Get(context.Background(), req.Email).Result()
 	if err == redis.Nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Verification code expired or email not found"})
 		return
@@ -143,12 +98,17 @@ func (h *HTTPHandler) RecoverPassword(c *gin.Context) {
 		return
 	}
 
-	_, err = h.US.ChangeUserPassword(c, &pb.UserChangePasswordReq{Email: req.Email, NewPassword: req.NewPassword})
+	hashedPassword, err := config.HashPassword(req.NewPassword)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't has your password", "details": err.Error()})
+		return
+	}
+	_, err = h.US.ChangeUserPassword(c, &pb.UserChangePasswordReq{Email: req.Email, NewPassword: hashedPassword})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error updating password", "details": err.Error()})
 		return
 	}
-	rdb.Del(context.Background(), req.Email)
+	h.RDB.Del(context.Background(), req.Email)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Password successfully updated"})
 }

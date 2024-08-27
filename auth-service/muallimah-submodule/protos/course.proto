@@ -3,6 +3,8 @@ syntax = "proto3";
 option go_package = "/internal/pkg/genproto";
 
 import "muallimah-submodule/protos/common.proto";
+import "muallimah-submodule/protos/category.proto";
+
 package protos;
 
 
@@ -20,7 +22,7 @@ message Course {
     string description = 3;
     float  price = 4;
     string image_url = 5;
-    string category_id = 6;
+    Category category = 6;
     string created_at = 7;
     string updated_at = 8;
 }

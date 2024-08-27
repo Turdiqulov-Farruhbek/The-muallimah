@@ -15,6 +15,115 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/confirm-registration": {
+            "post": {
+                "description": "Confirms a user's registration using the code sent to their email.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "registration"
+                ],
+                "summary": "Confirm registration with code",
+                "parameters": [
+                    {
+                        "description": "Confirmation request",
+                        "name": "confirmation",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genproto.ConfirmUserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "JWT tokens",
+                        "schema": {
+                            "$ref": "#/definitions/token.Tokens"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Incorrect verification code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Verification code expired or email not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/forgot-password": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Sends a confirmation code to email recovery password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "password-recovery"
+                ],
+                "summary": "Forgot passwrod",
+                "parameters": [
+                    {
+                        "description": "User login credentials",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genproto.ByEmail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Page not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Authenticate user with email and password",
@@ -35,7 +144,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.LoginReq"
+                            "$ref": "#/definitions/genproto.LoginReq"
                         }
                     }
                 ],
@@ -83,7 +192,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.GetProfileResp"
+                            "$ref": "#/definitions/genproto.UserGetRes"
                         }
                     },
                     "401": {
@@ -100,6 +209,64 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/recover-password": {
+            "post": {
+                "description": "Verifies the code and updates the password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "password-recovery"
+                ],
+                "summary": "Recover password (Use this one after sending verification code)",
+                "parameters": [
+                    {
+                        "description": "Recover Password Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genproto.UserChangePasswordReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Password successfully updated",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Incorrect verification code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Verification code expired or email not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating password",
                         "schema": {
                             "type": "string"
                         }
@@ -127,7 +294,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.RegisterReqSwag"
+                            "$ref": "#/definitions/genproto.UserCreateReqForSwagger"
                         }
                     }
                 ],
@@ -135,7 +302,55 @@ const docTemplate = `{
                     "201": {
                         "description": "JWT tokens",
                         "schema": {
-                            "$ref": "#/definitions/token.Tokens"
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/set-pfp": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Adds a profile image to user.",
+                "consumes": [
+                    "multipart/mixed"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "Set a profile picture",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Profile image",
+                        "name": "image",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Profile image is added",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -155,53 +370,116 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.GetProfileResp": {
+        "genproto.ByEmail": {
             "type": "object",
             "properties": {
                 "email": {
-                    "description": "User's email address",
+                    "type": "string"
+                }
+            }
+        },
+        "genproto.ConfirmUserReq": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "genproto.LoginReq": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "genproto.UserChangePasswordReq": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "new_password": {
+                    "type": "string"
+                }
+            }
+        },
+        "genproto.UserCreateReqForSwagger": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "dob": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "occupation": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                }
+            }
+        },
+        "genproto.UserGetRes": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "dob": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "gender": {
                     "type": "string"
                 },
                 "id": {
-                    "description": "User's unique identifier",
                     "type": "string"
                 },
-                "password": {
-                    "description": "User's password",
+                "is_confirmed": {
+                    "type": "boolean"
+                },
+                "last_name": {
                     "type": "string"
                 },
-                "username": {
-                    "description": "User's username",
-                    "type": "string"
-                }
-            }
-        },
-        "models.LoginReq": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "description": "User's email",
+                "occupation": {
                     "type": "string"
                 },
-                "password": {
-                    "description": "User's password",
-                    "type": "string"
-                }
-            }
-        },
-        "models.RegisterReqSwag": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "description": "User's email address",
+                "phone_number": {
                     "type": "string"
                 },
-                "password": {
-                    "description": "User's password",
-                    "type": "string"
-                },
-                "username": {
-                    "description": "User's username",
+                "photo_url": {
                     "type": "string"
                 }
             }
@@ -213,6 +491,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "refresh_token": {
+                    "type": "string"
+                },
+                "role": {
                     "type": "string"
                 }
             }

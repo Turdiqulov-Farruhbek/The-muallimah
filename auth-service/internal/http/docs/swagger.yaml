@@ -1,38 +1,76 @@
 definitions:
-  models.GetProfileResp:
+  genproto.ByEmail:
     properties:
       email:
-        description: User's email address
+        type: string
+    type: object
+  genproto.ConfirmUserReq:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+    type: object
+  genproto.LoginReq:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  genproto.UserChangePasswordReq:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+      new_password:
+        type: string
+    type: object
+  genproto.UserCreateReqForSwagger:
+    properties:
+      address:
+        type: string
+      dob:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      gender:
+        type: string
+      last_name:
+        type: string
+      occupation:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+    type: object
+  genproto.UserGetRes:
+    properties:
+      address:
+        type: string
+      dob:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      gender:
         type: string
       id:
-        description: User's unique identifier
         type: string
-      password:
-        description: User's password
+      is_confirmed:
+        type: boolean
+      last_name:
         type: string
-      username:
-        description: User's username
+      occupation:
         type: string
-    type: object
-  models.LoginReq:
-    properties:
-      email:
-        description: User's email
+      phone_number:
         type: string
-      password:
-        description: User's password
-        type: string
-    type: object
-  models.RegisterReqSwag:
-    properties:
-      email:
-        description: User's email address
-        type: string
-      password:
-        description: User's password
-        type: string
-      username:
-        description: User's username
+      photo_url:
         type: string
     type: object
   token.Tokens:
@@ -41,10 +79,82 @@ definitions:
         type: string
       refresh_token:
         type: string
+      role:
+        type: string
     type: object
 info:
   contact: {}
 paths:
+  /confirm-registration:
+    post:
+      consumes:
+      - application/json
+      description: Confirms a user's registration using the code sent to their email.
+      parameters:
+      - description: Confirmation request
+        in: body
+        name: confirmation
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.ConfirmUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: JWT tokens
+          schema:
+            $ref: '#/definitions/token.Tokens'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "401":
+          description: Incorrect verification code
+          schema:
+            type: string
+        "404":
+          description: Verification code expired or email not found
+          schema:
+            type: string
+      summary: Confirm registration with code
+      tags:
+      - registration
+  /forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: Sends a confirmation code to email recovery password
+      parameters:
+      - description: User login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.ByEmail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Page not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Forgot passwrod
+      tags:
+      - password-recovery
   /login:
     post:
       consumes:
@@ -56,7 +166,7 @@ paths:
         name: credentials
         required: true
         schema:
-          $ref: '#/definitions/models.LoginReq'
+          $ref: '#/definitions/genproto.LoginReq'
       produces:
       - application/json
       responses:
@@ -86,7 +196,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.GetProfileResp'
+            $ref: '#/definitions/genproto.UserGetRes'
         "401":
           description: Unauthorized
           schema:
@@ -104,6 +214,44 @@ paths:
       summary: Get user profile
       tags:
       - user
+  /recover-password:
+    post:
+      consumes:
+      - application/json
+      description: Verifies the code and updates the password
+      parameters:
+      - description: Recover Password Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.UserChangePasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Password successfully updated
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "401":
+          description: Incorrect verification code
+          schema:
+            type: string
+        "404":
+          description: Verification code expired or email not found
+          schema:
+            type: string
+        "500":
+          description: Error updating password
+          schema:
+            type: string
+      summary: Recover password (Use this one after sending verification code)
+      tags:
+      - password-recovery
   /register:
     post:
       consumes:
@@ -115,14 +263,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.RegisterReqSwag'
+          $ref: '#/definitions/genproto.UserCreateReqForSwagger'
       produces:
       - application/json
       responses:
         "201":
           description: JWT tokens
           schema:
-            $ref: '#/definitions/token.Tokens'
+            type: string
         "400":
           description: Invalid request payload
           schema:
@@ -134,6 +282,36 @@ paths:
       summary: Register a new user
       tags:
       - registration
+  /set-pfp:
+    post:
+      consumes:
+      - multipart/mixed
+      description: Adds a profile image to user.
+      parameters:
+      - description: Profile image
+        in: formData
+        name: image
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Profile image is added
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Set a profile picture
+      tags:
+      - product
 securityDefinitions:
   BearerAuth:
     in: header

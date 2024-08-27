@@ -22,4 +22,6 @@ type UserI interface {
 	ListUsers(context.Context, *pb.UsersGetAllReq) (*pb.UsersGetAllRes, error)
 	IsEmailExists(context.Context, *pb.UserEmailCheckReq) (*pb.UserEmailCheckRes, error)
 	GetUserSecurityByEmail(context.Context, *pb.ByEmail) (*pb.UserSecurityRes, error)
+	ConfirmUser(context.Context, *pb.ByEmail) (*pb.Void, error)
+	ChangeUserPFP(context.Context, *pb.UserChangePFPReq) (*pb.Void, error)
 }

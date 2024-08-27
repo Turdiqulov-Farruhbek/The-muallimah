@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS users (
     gender VARCHAR(200),
     photo_url VARCHAR(350),
     role VARCHAR(200) DEFAULT 'user',
+    is_confirmed BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at INT DEFAULT 0
@@ -77,6 +78,16 @@ CREATE TABLE IF NOT EXISTS additional_materials
     description TEXT
 );
 
+CREATE TABLE IF NOT EXISTS user_courses 
+(
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL references users(id),
+    course_id UUID NOT NULL references courses(id),
+    start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    end_date TIMESTAMP DEFAULT NULL,
+    status progress_status_type  
+);
+ 
 CREATE TABLE IF NOT EXISTS evaluations(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_course_id UUID references user_courses(id),
@@ -85,17 +96,6 @@ CREATE TABLE IF NOT EXISTS evaluations(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,     
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at INT DEFAULT 0
-);
-
-
-CREATE TABLE IF NOT EXISTS user_courses 
-(
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL references users(id),
-    course_id UUID NOT NULL references courses(id),
-    start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    end_date TIMESTAMP DEFAULT NULL,
-    status course_status_type  
 );
 
 CREATE TABLE IF NOT EXISTS user_lessons (
@@ -108,6 +108,7 @@ CREATE TABLE IF NOT EXISTS user_lessons (
 CREATE TABLE IF NOT EXISTS transactions(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_course_id UUID references user_courses(id),
+    user_id UUID references users(id),
     amount DECIMAL(10,2),
     type transaction_type,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -129,5 +130,5 @@ CREATE TABLE IF NOT EXISTS orders(
     type order_item_type,
     quantity INT DEFAULT 1,
     total_price DECIMAL(10,2),
-    status order_status_type,
+    status order_status_type
 );

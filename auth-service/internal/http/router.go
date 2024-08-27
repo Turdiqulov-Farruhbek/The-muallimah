@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	swaggerFiles "github.com/swaggo/files"
-
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	_ "auth-service/internal/http/docs"
@@ -25,6 +24,7 @@ func NewRouter(h *handlers.HTTPHandler) *gin.Engine {
 	router.POST("/login", h.Login)
 	router.POST("/forgot-password", h.ForgotPassword)
 	router.POST("/recover-password", h.RecoverPassword)
+	router.POST("/set-pfp", h.SetPFP)
 
 	protected := router.Group("/", middleware.JWTMiddleware())
 	protected.GET("/profile", h.Profile)
