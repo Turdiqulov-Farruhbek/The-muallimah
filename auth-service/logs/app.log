@@ -1,0 +1,4 @@
+2024-08-27 16:05:28 ERROR run.go:21 Postgres not connected due to error: pq: password authentication failed for user "mrbek"
+2024-08-27 16:10:49 ERROR run.go:21 Postgres not connected due to error: pq: database "muallimah_auth" does not exist
+2024-08-27 16:11:19 INFO run.go:21 Postgres connected
+2024-08-27 16:11:19 INFO run.go:21 gRPC server is running on port  :50050

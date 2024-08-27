@@ -35,7 +35,6 @@ func NewMinioClient() (*MinioClient, error) {
 	if err != nil {
 		exists, errBucketExists := minioClient.BucketExists(context.Background(), bucketName)
 		if errBucketExists != nil {
-			log.Println("Error checking if bucket exists:", errBucketExists)
 			return nil, errBucketExists
 		}
 		if exists {

@@ -20,7 +20,7 @@ services:
     volumes:
       - ./migrations:/migrations
     command: [ "-path", "/migrations", "-database",  
-                "postgres://postgres:root@delivery_auth:5432/delivery_auth?sslmode=disable", 
+                "postgres://postgres:root@delivery_auth:5432/delivery_auth_db?sslmode=disable", 
                 "up" ]
     depends_on:
       - postgres-db
@@ -32,7 +32,7 @@ services:
       PGUSER: postgres
       POSTGRES_PASSWORD: root
       # PGDATA: /data/postgres
-      POSTGRES_DB: delivery_auth
+      POSTGRES_DB: delivery_auth_db
     volumes:
       - db:/post-database/post-memory
     ports:
@@ -63,7 +63,26 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    
+  
+
+  minio:
+    container_name: minio
+    image: quay.io/minio/minio:latest
+    volumes:
+      - minio:/data
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: 'user'
+      MINIO_ROOT_PASSWORD: 'password'
+      MINIO_ADDRESS: ':9000'
+      MINIO_CONSOLE_ADDRESS: ':9001'
+    command: minio server /data
+    networks:
+      - global-network
+
+
   redis:
     image: redis:latest
     container_name: redis

@@ -7,6 +7,7 @@ import (
 	minio_connect "auth-service/internal/pkg/minio"
 	rdb "auth-service/internal/pkg/redis"
 
+	l "github.com/azizbek-qodirov/logger"
 	"google.golang.org/grpc"
 )
 
@@ -16,15 +17,15 @@ type HTTPHandler struct {
 	US    pb.UserServiceClient
 }
 
-func NewHandler(us *grpc.ClientConn) *HTTPHandler {
+func NewHandler(us *grpc.ClientConn, logger *l.Logger) *HTTPHandler {
 	db, err := rdb.NewRedisClient(context.Background())
 	if err != nil {
-		panic(err)
+		logger.ERROR.Panicln("Redis not connected due to error: " + err.Error())
 	}
 
 	mc, err := minio_connect.NewMinioClient()
 	if err != nil {
-		panic(err)
+		logger.ERROR.Panicln("Minio not connected due to error: " + err.Error())
 	}
 
 	return &HTTPHandler{

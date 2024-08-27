@@ -3,18 +3,19 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-
 	_ "auth-service/internal/http/docs"
 	"auth-service/internal/http/handlers"
 	"auth-service/internal/http/middleware"
+
+	l "github.com/azizbek-qodirov/logger"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
-func NewRouter(h *handlers.HTTPHandler) *gin.Engine {
+func NewRouter(h *handlers.HTTPHandler, logger *l.Logger) *gin.Engine {
 	router := gin.Default()
 
 	router.GET("/api/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -25,6 +26,7 @@ func NewRouter(h *handlers.HTTPHandler) *gin.Engine {
 	router.POST("/forgot-password", h.ForgotPassword)
 	router.POST("/recover-password", h.RecoverPassword)
 	router.POST("/set-pfp", h.SetPFP)
+	router.POST("/send-code", h.SendCodeAgain)
 
 	protected := router.Group("/", middleware.JWTMiddleware())
 	protected.GET("/profile", h.Profile)

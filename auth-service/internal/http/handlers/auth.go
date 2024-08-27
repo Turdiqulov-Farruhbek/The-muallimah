@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"context"
@@ -194,9 +195,7 @@ func (h *HTTPHandler) Profile(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
 	}
-	fmt.Println("claims", claims)
 	email := claims.(jwt.MapClaims)["email"].(string)
-	fmt.Println(email)
 	user, err := h.US.GetUserByEmail(c, &pb.ByEmail{Email: email})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"Server error": err.Error()})
@@ -214,7 +213,7 @@ func (h *HTTPHandler) Profile(c *gin.Context) {
 // SetProfilePicture godoc
 // @Summary Set a profile picture
 // @Description Adds a profile image to user.
-// @Tags product
+// @Tags user
 // @Accept multipart/mixed
 // @Produce json
 // @Param image formData file false "Profile image"
@@ -267,14 +266,14 @@ func (h *HTTPHandler) SetPFP(c *gin.Context) {
 	info, err := h.Minio.Client.FPutObject(
 		c,
 		h.Minio.DefaultBucket(),
-		fmt.Sprintf("pfp-%s", email),
-		tempFolderPath,
+		fmt.Sprintf("pfp-%s", strings.Split(email.(string), "@")[0]),
+		filepath,
 		minio.PutObjectOptions{
 			ContentType: "image/jpeg",
 		},
 	)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error", "err": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't put object to minio", "details": err.Error()})
 		return
 	}
 	imgurl := fmt.Sprintf("http://localhost:9000/%s/%s", h.Minio.DefaultBucket(), info.Key)

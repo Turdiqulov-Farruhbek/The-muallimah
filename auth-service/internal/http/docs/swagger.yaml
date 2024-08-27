@@ -282,6 +282,42 @@ paths:
       summary: Register a new user
       tags:
       - registration
+  /send-code:
+    post:
+      consumes:
+      - application/json
+      description: Sends a confirmation code to email recovery password again
+      parameters:
+      - description: User login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.ByEmail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Page not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Sends code again if user didn't recieve the code
+      tags:
+      - password-recovery
   /set-pfp:
     post:
       consumes:
@@ -311,7 +347,7 @@ paths:
       - BearerAuth: []
       summary: Set a profile picture
       tags:
-      - product
+      - user
 securityDefinitions:
   BearerAuth:
     in: header

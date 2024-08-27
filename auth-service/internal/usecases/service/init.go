@@ -3,16 +3,16 @@ package service
 import (
 	"auth-service/internal/pkg/config"
 	"auth-service/internal/storage/repo"
-	"fmt"
-	"log"
 	"net"
 
 	pb "auth-service/internal/pkg/genproto"
 
+	l "github.com/azizbek-qodirov/logger"
+
 	"google.golang.org/grpc"
 )
 
-func Server(cfg *config.Config, stg *repo.Storage) {
+func Server(cfg *config.Config, logger l.Logger, stg *repo.Storage) {
 	userService := NewUserService(stg)
 
 	newServer := grpc.NewServer()
@@ -20,12 +20,12 @@ func Server(cfg *config.Config, stg *repo.Storage) {
 
 	lis, err := net.Listen("tcp", cfg.AUTH_GRPC_PORT)
 	if err != nil {
-		log.Fatal(err)
+		logger.ERROR.Panicln("Failed to listen gRPC server: ", err.Error())
 	}
 
-	fmt.Println("gRPC server is running on port ", cfg.AUTH_GRPC_PORT)
+	logger.INFO.Println("gRPC server is running on port ", cfg.AUTH_GRPC_PORT)
 	err = newServer.Serve(lis)
 	if err != nil {
-		log.Fatal(err)
+		logger.ERROR.Panicln("Failed to serve gRPC server: ", err.Error())
 	}
 }
