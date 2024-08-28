@@ -32,3 +32,6 @@ func New(cfg *config.Config) (*Postgres, error) {
 
 	return &Postgres{DB: db}, nil
 }
+func (db *Postgres) Close() error {
+	return db.DB.Close()
+}
