@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  auth-service:
+    container_name: notification_delivery
+    build: ./
+    ports:
+      - "6061:6061"
+    networks:
+      - global-network
+
+networks:
+  global-network:
+    external: true
+    name: delivery
+    driver: bridge
