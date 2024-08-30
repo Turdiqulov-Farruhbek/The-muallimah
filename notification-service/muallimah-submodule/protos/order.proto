@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+option go_package = "/internal/pkg/genproto";
+
+import "muallimah-submodule/protos/common.proto";
+package protos;
+
+service OrderService {
+    rpc CreateOrder(OrderCreateReq) returns (Void);
+    rpc GetOrder(OrderGetReq) returns (OrderGetRes);
+    rpc UpdateOrder(OrderUpdateReq) returns (Void);
+    rpc DeleteOrder(OrderDeleteReq) returns (Void);
+    rpc ListOrders(OrderListsReq) returns (OrderListsRes);
+}
+
+message Order {
+    string id = 1;
+    string user_id = 2;
+    string item_id = 3;
+    string type = 4;  
+    int32 quantity = 5;
+    string total_price = 6; 
+    string status = 7;  
+}
+
+message OrderCreateReq {
+    string user_id = 1;
+    string item_id = 2;
+    string type = 3;
+    int32 quantity = 4;
+    string total_price = 5;
+    string status = 6;
+}
+
+message OrderGetReq {
+    string id = 1;
+}
+
+message OrderGetRes {
+    Order order = 1;
+}
+
+message OrderUpdateReq {
+    string id = 1;
+    OrderUpt body = 2;
+}
+
+message OrderUpt {
+    string item_id = 1;
+    string type = 2;
+    int32 quantity = 3;
+    string total_price = 4;
+    string status = 5;
+}
+
+message OrderDeleteReq {
+    string id = 1;
+}
+
+message OrderListsReq {
+    string user_id = 1;
+    Pagination filter = 2;
+}
+
+message OrderListsRes {
+    repeated Order orders = 1;
+    Pagination pagination = 2;
+    int32 total_count = 3;
+}
+

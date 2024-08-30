@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option go_package = "/internal/pkg/genproto";
+
+package protos;
+
+import "muallimah-submodule/protos/common.proto";
+
+service LessonService {
+    rpc CreateLesson(LessonCreateReq) returns (Void);
+    rpc GetLesson(ById) returns (LessonGet);
+    rpc UpdateLesson(LessonUpdate) returns (Void);
+    rpc DeleteLesson(ById) returns (Void);
+    rpc ListLessons(LessonFilter) returns (LessonList);
+}
+message LessonCreateReq {
+    string CurseId = 1;
+    string Name = 2;
+    string Description = 3;
+    string VideoUrl = 4;
+}
+message LessonGet {
+    string Id = 1;
+    string CurseId = 2;
+    string Name = 3;
+    string Description = 4;
+    string VideoUrl = 5;
+    string CreatedAt = 6;
+}
+message LessonUpt {
+    string Name = 1;
+    string Description = 2;
+    string VideoUrl = 3;
+}
+message LessonUpdate {
+    string Id = 1;
+    LessonUpt Body = 2;
+}
+message LessonList {
+    repeated LessonGet Lessons = 1;
+    int32 Count = 2;
+    Pagination Pagination = 3;
+}
+message LessonFilter {
+    string CourseId = 1;
+    Pagination Filter = 2;
+}
+
+
+
+

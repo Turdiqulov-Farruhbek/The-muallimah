@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+option go_package = "/internal/pkg/genproto";
+
+import "muallimah-submodule/protos/common.proto";
+import "muallimah-submodule/protos/course.proto";
+import "muallimah-submodule/protos/user.proto";
+
+
+package protos;
+
+service UserCourseService {
+    rpc EnrollUserInCourse(UserCourseCreateReq) returns (Void);
+    rpc GetUserCourse(ById) returns (UserCourse);
+    rpc UpdateUserCourse(UserCourseUpdateReq) returns (Void);
+    rpc DeleteUserCourse(ById) returns (Void);
+    rpc ListUserCourses(UserCourseListsReq) returns (UserCourseListsRes);
+}
+
+message UserCourse {
+    string id = 1;
+    UserGetRes user = 2;
+    Course course = 3;
+    string start_date = 4;
+    string end_date = 5;
+    string status = 6;  
+}
+
+message UserCourseCreateReq {
+    string user_id = 1;
+    string course_id = 2;
+}
+
+// message UserCourseGetRes {
+//     UserCourse user_course = 1;
+// }
+
+message UserCourseUpdateReq {
+    string id = 1;
+    UserUpt body = 2;
+}
+
+message UserUpt {
+    string start_date = 1;
+    string end_date = 2;
+    string status = 3;
+}
+
+message UserCourseListsReq {
+    string user_id = 1;
+    Pagination filter = 2; 
+}
+
+message UserCourseListsRes {
+    repeated UserCourse user_courses = 1;
+    Pagination pagination = 2;
+    int32 total_count = 3;
+}
+
