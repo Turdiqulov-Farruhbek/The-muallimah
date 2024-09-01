@@ -28,6 +28,46 @@ definitions:
       name:
         type: string
     type: object
+  genproto.MaterialCreateReq:
+    properties:
+      description:
+        type: string
+      lesson_id:
+        type: string
+      resource_url:
+        type: string
+      title:
+        type: string
+    type: object
+  genproto.MaterialGetRes:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      lesson_id:
+        type: string
+      resource_url:
+        type: string
+      title:
+        type: string
+    type: object
+  genproto.MaterialListRes:
+    properties:
+      materials:
+        items:
+          $ref: '#/definitions/genproto.MaterialGetRes'
+        type: array
+    type: object
+  genproto.MaterialUpdate:
+    properties:
+      description:
+        type: string
+      resource_url:
+        type: string
+      title:
+        type: string
+    type: object
   genproto.Pagination:
     properties:
       limit:
@@ -212,6 +252,181 @@ paths:
       summary: List Categories
       tags:
       - Category
+  /materials/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a material by its ID
+      parameters:
+      - description: Material ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Material deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Material not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Material
+      tags:
+      - Material
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a material by its ID
+      parameters:
+      - description: Material ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Material details
+          schema:
+            $ref: '#/definitions/genproto.MaterialGetRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Material not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Material
+      tags:
+      - Material
+    put:
+      consumes:
+      - application/json
+      description: Update an existing material
+      parameters:
+      - description: Material ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Material data
+        in: body
+        name: material
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.MaterialUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Material updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Material
+      tags:
+      - Material
+  /materials/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new material
+      parameters:
+      - description: Material data
+        in: body
+        name: material
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.MaterialCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Material created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Material
+      tags:
+      - Material
+  /materials/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of materials
+      parameters:
+      - description: Lesson ID
+        in: query
+        name: lesson_id
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of materials
+          schema:
+            $ref: '#/definitions/genproto.MaterialListRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Materials
+      tags:
+      - Material
 securityDefinitions:
   BearerAuth:
     in: header

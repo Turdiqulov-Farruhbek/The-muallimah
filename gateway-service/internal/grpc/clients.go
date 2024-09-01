@@ -20,7 +20,7 @@ type Clients struct {
 	Post         pb.PostServiceClient
 	Product      pb.ProductServiceClient
 	Transaction  pb.TransactionServiceClient
-	UserService  pb.UserServiceClient
+	User  pb.UserServiceClient
 	UserLesson   pb.UserLessonServiceClient
 	UserCourse   pb.UserCourseServiceClient
 	Notification pb.NotificationServiceClient
@@ -76,7 +76,7 @@ func NewClients(cfg *config.Config) (*Clients, error) {
 		Post:         postClient,
 		Product:      productClient,
 		Transaction:  transactionClient,
-		UserService:  userClient,
+		User:  userClient,
 		UserLesson:   userLessonClient,
 		UserCourse:   userCourseClient,
 		Notification: notificationClient,
