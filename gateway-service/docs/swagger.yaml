@@ -1,5 +1,80 @@
 basePath: /
 definitions:
+  genproto.BalanceGetRes:
+    properties:
+      balance:
+        type: number
+      get_usage:
+        type: boolean
+      usage:
+        $ref: '#/definitions/genproto.BalanceGetRes_Stats'
+    type: object
+  genproto.BalanceGetRes_Stats:
+    properties:
+      course_spendings:
+        type: number
+      payments:
+        type: number
+      shop_spendings:
+        type: number
+    type: object
+  genproto.BookCreate:
+    properties:
+      Description:
+        type: string
+      PictureUrls:
+        items:
+          type: string
+        type: array
+      Price:
+        type: number
+      Title:
+        type: string
+    type: object
+  genproto.BookGet:
+    properties:
+      CreatedAt:
+        type: string
+      Description:
+        type: string
+      Id:
+        type: string
+      PictureUrls:
+        items:
+          type: string
+        type: array
+      Price:
+        type: number
+      Title:
+        type: string
+    type: object
+  genproto.BookList:
+    properties:
+      Books:
+        items:
+          $ref: '#/definitions/genproto.BookGet'
+        type: array
+      Pagination:
+        $ref: '#/definitions/genproto.Pagination'
+      TotalCount:
+        type: integer
+    type: object
+  genproto.BookPicture:
+    properties:
+      BookId:
+        type: string
+      PictureUrl:
+        type: string
+    type: object
+  genproto.BookUpt:
+    properties:
+      Description:
+        type: string
+      Price:
+        type: number
+      Title:
+        type: string
+    type: object
   genproto.Category:
     properties:
       id:
@@ -26,6 +101,168 @@ definitions:
   genproto.CategoryUpt:
     properties:
       name:
+        type: string
+    type: object
+  genproto.CertificateGet:
+    properties:
+      Id:
+        type: string
+      Status:
+        type: string
+      UserCourse:
+        $ref: '#/definitions/genproto.UserCourse'
+      file_url:
+        type: string
+    type: object
+  genproto.CertificateList:
+    properties:
+      Items:
+        items:
+          $ref: '#/definitions/genproto.CertificateGet'
+        type: array
+      Pagination:
+        $ref: '#/definitions/genproto.Pagination'
+      TotalCount:
+        type: integer
+    type: object
+  genproto.CertificateUpt:
+    properties:
+      Status:
+        type: string
+      file_url:
+        type: string
+    type: object
+  genproto.Course:
+    properties:
+      category:
+        $ref: '#/definitions/genproto.Category'
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  genproto.CourseCreateReq:
+    properties:
+      category_id:
+        type: string
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  genproto.CourseListsRes:
+    properties:
+      courses:
+        items:
+          $ref: '#/definitions/genproto.Course'
+        type: array
+      pagination:
+        $ref: '#/definitions/genproto.Pagination'
+      total_count:
+        type: integer
+    type: object
+  genproto.CourseUpt:
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  genproto.EvaluationCreate:
+    properties:
+      Feedback:
+        type: string
+      Score:
+        type: integer
+      UserCourseId:
+        type: string
+    type: object
+  genproto.EvaluationGet:
+    properties:
+      CreatedAt:
+        type: string
+      Feedback:
+        type: string
+      Id:
+        type: string
+      Score:
+        type: integer
+      UserCourseId:
+        $ref: '#/definitions/genproto.UserCourse'
+    type: object
+  genproto.EvaluationList:
+    properties:
+      Get:
+        items:
+          $ref: '#/definitions/genproto.EvaluationGet'
+        type: array
+      Pagination:
+        $ref: '#/definitions/genproto.Pagination'
+      TotalCount:
+        type: integer
+    type: object
+  genproto.LessonCreateReq:
+    properties:
+      CurseId:
+        type: string
+      Description:
+        type: string
+      Name:
+        type: string
+      VideoUrl:
+        type: string
+    type: object
+  genproto.LessonGet:
+    properties:
+      CreatedAt:
+        type: string
+      CurseId:
+        type: string
+      Description:
+        type: string
+      Id:
+        type: string
+      Name:
+        type: string
+      VideoUrl:
+        type: string
+    type: object
+  genproto.LessonList:
+    properties:
+      Count:
+        type: integer
+      Lessons:
+        items:
+          $ref: '#/definitions/genproto.LessonGet'
+        type: array
+      Pagination:
+        $ref: '#/definitions/genproto.Pagination'
+    type: object
+  genproto.LessonUpt:
+    properties:
+      Description:
+        type: string
+      Name:
+        type: string
+      VideoUrl:
         type: string
     type: object
   genproto.MaterialCreateReq:
@@ -68,6 +305,67 @@ definitions:
       title:
         type: string
     type: object
+  genproto.Order:
+    properties:
+      id:
+        type: string
+      item_id:
+        type: string
+      quantity:
+        type: integer
+      status:
+        type: string
+      total_price:
+        type: string
+      type:
+        type: string
+      user_id:
+        type: string
+    type: object
+  genproto.OrderCreateReq:
+    properties:
+      item_id:
+        type: string
+      quantity:
+        type: integer
+      status:
+        type: string
+      total_price:
+        type: string
+      type:
+        type: string
+      user_id:
+        type: string
+    type: object
+  genproto.OrderGetRes:
+    properties:
+      order:
+        $ref: '#/definitions/genproto.Order'
+    type: object
+  genproto.OrderListsRes:
+    properties:
+      orders:
+        items:
+          $ref: '#/definitions/genproto.Order'
+        type: array
+      pagination:
+        $ref: '#/definitions/genproto.Pagination'
+      total_count:
+        type: integer
+    type: object
+  genproto.OrderUpt:
+    properties:
+      item_id:
+        type: string
+      quantity:
+        type: integer
+      status:
+        type: string
+      total_price:
+        type: string
+      type:
+        type: string
+    type: object
   genproto.Pagination:
     properties:
       limit:
@@ -75,12 +373,585 @@ definitions:
       offset:
         type: integer
     type: object
+  genproto.PostCreate:
+    properties:
+      PictureUrls:
+        items:
+          type: string
+        type: array
+      content:
+        type: string
+      title:
+        type: string
+    type: object
+  genproto.PostGet:
+    properties:
+      CreatedAt:
+        type: string
+      PictureUrls:
+        items:
+          type: string
+        type: array
+      content:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+    type: object
+  genproto.PostList:
+    properties:
+      Pagination:
+        $ref: '#/definitions/genproto.Pagination'
+      Posts:
+        items:
+          $ref: '#/definitions/genproto.PostGet'
+        type: array
+      TotalCount:
+        type: integer
+    type: object
+  genproto.PostPicture:
+    properties:
+      PictureUrl:
+        type: string
+      PostId:
+        type: string
+    type: object
+  genproto.PostUpdate:
+    properties:
+      Body:
+        $ref: '#/definitions/genproto.PostUpt'
+      id:
+        type: string
+    type: object
+  genproto.PostUpt:
+    properties:
+      Content:
+        type: string
+      Title:
+        type: string
+    type: object
+  genproto.ProductCreate:
+    properties:
+      Description:
+        type: string
+      PictureUrls:
+        items:
+          type: string
+        type: array
+      Price:
+        type: number
+      Title:
+        type: string
+    type: object
+  genproto.ProductGet:
+    properties:
+      CreatedAt:
+        type: string
+      Description:
+        type: string
+      Id:
+        type: string
+      PictureUrls:
+        items:
+          type: string
+        type: array
+      Price:
+        type: number
+      Title:
+        type: string
+    type: object
+  genproto.ProductList:
+    properties:
+      Pagination:
+        $ref: '#/definitions/genproto.Pagination'
+      Products:
+        items:
+          $ref: '#/definitions/genproto.ProductGet'
+        type: array
+      TotalCount:
+        type: integer
+    type: object
+  genproto.ProductPicture:
+    properties:
+      PictureUrl:
+        type: string
+      ProductId:
+        type: string
+    type: object
+  genproto.ProductUpt:
+    properties:
+      Description:
+        type: string
+      Price:
+        type: number
+      Title:
+        type: string
+    type: object
+  genproto.TransactionCreateReq:
+    properties:
+      amount:
+        type: number
+      type:
+        type: string
+      user_course_id:
+        type: string
+      user_id:
+        type: string
+    type: object
+  genproto.TransactionGetRes:
+    properties:
+      amount:
+        type: number
+      id:
+        type: string
+      type:
+        type: string
+      user:
+        $ref: '#/definitions/genproto.UserGetRes'
+      user_course:
+        $ref: '#/definitions/genproto.UserCourse'
+    type: object
+  genproto.TransactionListRes:
+    properties:
+      transactions:
+        items:
+          $ref: '#/definitions/genproto.TransactionGetRes'
+        type: array
+    type: object
+  genproto.UserCourse:
+    properties:
+      course:
+        $ref: '#/definitions/genproto.Course'
+      end_date:
+        type: string
+      id:
+        type: string
+      start_date:
+        type: string
+      status:
+        type: string
+      user:
+        $ref: '#/definitions/genproto.UserGetRes'
+    type: object
+  genproto.UserCourseCreateReq:
+    properties:
+      course_id:
+        type: string
+      user_id:
+        type: string
+    type: object
+  genproto.UserCourseListsRes:
+    properties:
+      pagination:
+        $ref: '#/definitions/genproto.Pagination'
+      total_count:
+        type: integer
+      user_courses:
+        items:
+          $ref: '#/definitions/genproto.UserCourse'
+        type: array
+    type: object
+  genproto.UserCreatePFPReqForSwagger:
+    properties:
+      photo_url:
+        type: string
+    type: object
+  genproto.UserCreateReqForSwagger:
+    properties:
+      address:
+        type: string
+      dob:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      gender:
+        type: string
+      last_name:
+        type: string
+      occupation:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+    type: object
+  genproto.UserEmailCheckRes:
+    properties:
+      exists:
+        type: boolean
+    type: object
+  genproto.UserGetRes:
+    properties:
+      address:
+        type: string
+      dob:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      gender:
+        type: string
+      id:
+        type: string
+      is_confirmed:
+        type: boolean
+      last_name:
+        type: string
+      occupation:
+        type: string
+      phone_number:
+        type: string
+      photo_url:
+        type: string
+    type: object
+  genproto.UserLesson:
+    properties:
+      LessonId:
+        type: string
+      UserCourse:
+        $ref: '#/definitions/genproto.UserCourse'
+      id:
+        type: string
+      status:
+        description: 'Enum type: progress_status_type'
+        type: string
+    type: object
+  genproto.UserLessonCreateReq:
+    properties:
+      UserCourseId:
+        type: string
+      lesson_id:
+        type: string
+      status:
+        type: string
+    type: object
+  genproto.UserLessonListsRes:
+    properties:
+      TotalCount:
+        type: integer
+      pagination:
+        $ref: '#/definitions/genproto.Pagination'
+      user_lessons:
+        items:
+          $ref: '#/definitions/genproto.UserLesson'
+        type: array
+    type: object
+  genproto.UserLessonUpdateReq:
+    properties:
+      body:
+        $ref: '#/definitions/genproto.UserUptbody'
+      id:
+        type: string
+    type: object
+  genproto.UserRecoverPasswordReq:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+      new_password:
+        type: string
+    type: object
+  genproto.UserUpdate:
+    properties:
+      address:
+        type: string
+      dob:
+        type: string
+      first_name:
+        type: string
+      gender:
+        type: string
+      last_name:
+        type: string
+      occupation:
+        type: string
+      phone_number:
+        type: string
+    type: object
+  genproto.UserUpdateReq:
+    properties:
+      body:
+        $ref: '#/definitions/genproto.UserUpdate'
+      id:
+        type: string
+    type: object
+  genproto.UserUpt:
+    properties:
+      end_date:
+        type: string
+      start_date:
+        type: string
+      status:
+        type: string
+    type: object
+  genproto.UserUptbody:
+    properties:
+      status:
+        type: string
+    type: object
+  genproto.UsersGetAllRes:
+    properties:
+      pagination:
+        $ref: '#/definitions/genproto.Pagination'
+      users:
+        items:
+          $ref: '#/definitions/genproto.UserGetRes'
+        type: array
+    type: object
+  genproto.Void:
+    type: object
 info:
   contact: {}
   description: API for Instant Delivery resources
   title: Finance Tracker API Documentation
   version: "1.0"
 paths:
+  /books/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a book by its ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Book details
+          schema:
+            $ref: '#/definitions/genproto.BookGet'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Book
+      tags:
+      - Books
+  /books/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new book
+      parameters:
+      - description: Book data
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.BookCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Book created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Book
+      tags:
+      - Books
+  /books/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a book by its ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Book deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Book
+      tags:
+      - Books
+  /books/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of books
+      parameters:
+      - description: Title
+        in: query
+        name: title
+        type: string
+      - description: Price From
+        in: query
+        name: price_from
+        type: number
+      - description: Price To
+        in: query
+        name: price_to
+        type: number
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of books
+          schema:
+            $ref: '#/definitions/genproto.BookList'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Books
+      tags:
+      - Books
+  /books/picture/add:
+    post:
+      consumes:
+      - application/json
+      description: Add a picture to a book
+      parameters:
+      - description: Book picture data
+        in: body
+        name: bookPicture
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.BookPicture'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Picture added successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Add Picture
+      tags:
+      - Books
+  /books/picture/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a picture from a book
+      parameters:
+      - description: Book picture data
+        in: body
+        name: bookPicture
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.BookPicture'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Picture deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Picture
+      tags:
+      - Books
+  /books/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update an existing book
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Book data
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.BookUpt'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Book updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Book
+      tags:
+      - Books
   /categories/{id}:
     delete:
       consumes:
@@ -252,6 +1123,667 @@ paths:
       summary: List Categories
       tags:
       - Category
+  /certificates/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a certificate by its ID
+      parameters:
+      - description: Certificate ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Certificate details
+          schema:
+            $ref: '#/definitions/genproto.CertificateGet'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Certificate
+      tags:
+      - Certificates
+  /certificates/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new certificate
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Certificate created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Certificate
+      tags:
+      - Certificates
+  /certificates/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a certificate by its ID
+      parameters:
+      - description: Certificate ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Certificate deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Certificate
+      tags:
+      - Certificates
+  /certificates/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of certificates
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Course ID
+        in: query
+        name: course_id
+        type: string
+      - description: Status
+        in: query
+        name: status
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of certificates
+          schema:
+            $ref: '#/definitions/genproto.CertificateList'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Certificates
+      tags:
+      - Certificates
+  /certificates/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update an existing certificate
+      parameters:
+      - description: Certificate ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Certificate data
+        in: body
+        name: certificate
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.CertificateUpt'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Certificate updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Certificate
+      tags:
+      - Certificates
+  /course/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve details of a specific course by its ID
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genproto.Course'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get course details by ID
+      tags:
+      - courses
+  /course/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new course with the provided details
+      parameters:
+      - description: Course details
+        in: body
+        name: course
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.CourseCreateReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/genproto.Void'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create a new course
+      tags:
+      - courses
+  /course/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a specific course by its ID
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genproto.Void'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a course by ID
+      tags:
+      - courses
+  /course/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of courses with optional filters
+      parameters:
+      - description: Category ID
+        in: query
+        name: category_id
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genproto.CourseListsRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: List all courses
+      tags:
+      - courses
+  /course/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update the details of a specific course by its ID
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Course details
+        in: body
+        name: course
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.CourseUpt'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genproto.Void'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update course details by ID
+      tags:
+      - courses
+  /evaluations/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an evaluation by its ID
+      parameters:
+      - description: Evaluation ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Evaluation deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Evaluation not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Evaluation
+      tags:
+      - Evaluation
+    get:
+      consumes:
+      - application/json
+      description: Retrieve an evaluation by its ID
+      parameters:
+      - description: Evaluation ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Evaluation details
+          schema:
+            $ref: '#/definitions/genproto.EvaluationGet'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Evaluation not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Evaluation
+      tags:
+      - Evaluation
+  /evaluations/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new evaluation
+      parameters:
+      - description: Evaluation data
+        in: body
+        name: evaluation
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.EvaluationCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Evaluation created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Evaluation
+      tags:
+      - Evaluation
+  /evaluations/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of evaluations
+      parameters:
+      - description: Course ID
+        in: query
+        name: course_id
+        type: string
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Score From
+        in: query
+        name: score_from
+        type: integer
+      - description: Score To
+        in: query
+        name: score_to
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of evaluations
+          schema:
+            $ref: '#/definitions/genproto.EvaluationList'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Evaluations
+      tags:
+      - Evaluation
+  /lessons/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a lesson by its ID
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Lesson deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Lesson not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Lesson
+      tags:
+      - Lesson
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a lesson by its ID
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Lesson details
+          schema:
+            $ref: '#/definitions/genproto.LessonGet'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Lesson not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Lesson
+      tags:
+      - Lesson
+    put:
+      consumes:
+      - application/json
+      description: Update an existing lesson
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Lesson data
+        in: body
+        name: lesson
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.LessonUpt'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Lesson updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Lesson
+      tags:
+      - Lesson
+  /lessons/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new lesson
+      parameters:
+      - description: Lesson data
+        in: body
+        name: lesson
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.LessonCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Lesson created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Lesson
+      tags:
+      - Lesson
+  /lessons/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of lessons
+      parameters:
+      - description: Course ID
+        in: query
+        name: course_id
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of lessons
+          schema:
+            $ref: '#/definitions/genproto.LessonList'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Lessons
+      tags:
+      - Lesson
   /materials/{id}:
     delete:
       consumes:
@@ -427,6 +1959,1524 @@ paths:
       summary: List Materials
       tags:
       - Material
+  /orders/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an order by its ID
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Order not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Order
+      tags:
+      - Order
+    get:
+      consumes:
+      - application/json
+      description: Retrieve an order by its ID
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order details
+          schema:
+            $ref: '#/definitions/genproto.OrderGetRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Order not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Order
+      tags:
+      - Order
+    put:
+      consumes:
+      - application/json
+      description: Update an existing order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Order data
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.OrderUpt'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Order
+      tags:
+      - Order
+  /orders/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new order
+      parameters:
+      - description: Order data
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.OrderCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Order
+      tags:
+      - Order
+  /orders/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of orders
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of orders
+          schema:
+            $ref: '#/definitions/genproto.OrderListsRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Orders
+      tags:
+      - Order
+  /posts:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of posts with pagination
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of posts
+          schema:
+            $ref: '#/definitions/genproto.PostList'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Posts
+      tags:
+      - Post
+  /posts/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a post by its ID
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Post deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Post not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Post
+      tags:
+      - Post
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a post by its ID
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Post details
+          schema:
+            $ref: '#/definitions/genproto.PostGet'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Post not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Post
+      tags:
+      - Post
+    put:
+      consumes:
+      - application/json
+      description: Update an existing post
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Post data
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.PostUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Post updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Post
+      tags:
+      - Post
+  /posts/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new post
+      parameters:
+      - description: Post data
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.PostCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Post created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Post
+      tags:
+      - Post
+  /posts/picture/add:
+    post:
+      consumes:
+      - application/json
+      description: Add a picture to a post
+      parameters:
+      - description: Post picture data
+        in: body
+        name: picture
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.PostPicture'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Picture added successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Add Post Picture
+      tags:
+      - Post
+  /posts/picture/delete:
+    post:
+      consumes:
+      - application/json
+      description: Delete a picture from a post
+      parameters:
+      - description: Post picture data
+        in: body
+        name: picture
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.PostPicture'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Picture deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Post Picture
+      tags:
+      - Post
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product by its ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Product not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Product
+      tags:
+      - Product
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a product by its ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product details
+          schema:
+            $ref: '#/definitions/genproto.ProductGet'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Product not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Product
+      tags:
+      - Product
+    put:
+      consumes:
+      - application/json
+      description: Update an existing product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.ProductUpt'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update Product
+      tags:
+      - Product
+  /products/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new product
+      parameters:
+      - description: Product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.ProductCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Product
+      tags:
+      - Product
+  /products/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of products
+      parameters:
+      - description: Title
+        in: query
+        name: title
+        type: string
+      - description: Price from
+        in: query
+        name: price_from
+        type: number
+      - description: Price to
+        in: query
+        name: price_to
+        type: number
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of products
+          schema:
+            $ref: '#/definitions/genproto.ProductList'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Products
+      tags:
+      - Product
+  /products/pictures/add:
+    post:
+      consumes:
+      - application/json
+      description: Add a picture to a product
+      parameters:
+      - description: Picture data
+        in: body
+        name: picture
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.ProductPicture'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Picture added successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Add Picture
+      tags:
+      - Product
+  /products/pictures/delete:
+    post:
+      consumes:
+      - application/json
+      description: Delete a picture from a product
+      parameters:
+      - description: Picture data
+        in: body
+        name: picture
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.ProductPicture'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Picture deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete Picture
+      tags:
+      - Product
+  /transactions/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a transaction by its ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction details
+          schema:
+            $ref: '#/definitions/genproto.TransactionGetRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Transaction not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Transaction
+      tags:
+      - Transaction
+  /transactions/balance/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve the balance and usage statistics for a user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User balance and usage statistics
+          schema:
+            $ref: '#/definitions/genproto.BalanceGetRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Balance
+      tags:
+      - Transaction
+  /transactions/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new transaction
+      parameters:
+      - description: Transaction data
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.TransactionCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create Transaction
+      tags:
+      - Transaction
+  /transactions/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of transactions
+      parameters:
+      - description: User Course ID
+        in: query
+        name: user_course_id
+        type: string
+      - description: Amount from
+        in: query
+        name: amount_from
+        type: number
+      - description: Amount to
+        in: query
+        name: amount_to
+        type: number
+      - description: Transaction type
+        in: query
+        name: type
+        type: string
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Course ID
+        in: query
+        name: course_id
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of transactions
+          schema:
+            $ref: '#/definitions/genproto.TransactionListRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Transactions
+      tags:
+      - Transaction
+  /user-courses:
+    get:
+      consumes:
+      - application/json
+      description: List all user courses with optional filters and pagination
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of user courses
+          schema:
+            $ref: '#/definitions/genproto.UserCourseListsRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error"``
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List User Courses
+      tags:
+      - UserCourse
+  /user-courses/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user course by its ID
+      parameters:
+      - description: User course ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User course deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete User Course
+      tags:
+      - UserCourse
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a user course by its ID
+      parameters:
+      - description: User course ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User course details
+          schema:
+            $ref: '#/definitions/genproto.UserCourse'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: User course not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get User Course
+      tags:
+      - UserCourse
+    put:
+      consumes:
+      - application/json
+      description: Update the details of an existing user course
+      parameters:
+      - description: User course ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User course update data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.UserUpt'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User course updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update User Course
+      tags:
+      - UserCourse
+  /user-courses/enroll:
+    post:
+      consumes:
+      - application/json
+      description: Enroll a user in a specified course
+      parameters:
+      - description: User and course IDs
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.UserCourseCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User enrolled in course successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Enroll User in Course
+      tags:
+      - UserCourse
+  /user-lessons/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a user lesson by its ID
+      parameters:
+      - description: User Lesson ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User Lesson details
+          schema:
+            $ref: '#/definitions/genproto.UserLesson'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: User Lesson not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get User Lesson
+      tags:
+      - UserLesson
+  /user-lessons/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user lesson
+      parameters:
+      - description: User Lesson data
+        in: body
+        name: user_lesson
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.UserLessonCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User Lesson created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create User Lesson
+      tags:
+      - UserLesson
+  /user-lessons/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user lesson by its ID
+      parameters:
+      - description: User Lesson ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User Lesson deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete User Lesson
+      tags:
+      - UserLesson
+  /user-lessons/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of user lessons with optional filters
+      parameters:
+      - description: User Course ID
+        in: query
+        name: user_course_id
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of user lessons
+          schema:
+            $ref: '#/definitions/genproto.UserLessonListsRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List User Lessons
+      tags:
+      - UserLesson
+  /user-lessons/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update a user lesson
+      parameters:
+      - description: User Lesson ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User Lesson update data
+        in: body
+        name: user_lesson
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.UserLessonUpdateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User Lesson updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update User Lesson
+      tags:
+      - UserLesson
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: List all users with optional filters and pagination
+      parameters:
+      - in: query
+        name: address
+        type: string
+      - in: query
+        name: dob_from
+        type: string
+      - in: query
+        name: dob_to
+        type: string
+      - in: query
+        name: email
+        type: string
+      - in: query
+        name: first_name
+        type: string
+      - in: query
+        name: gender
+        type: string
+      - in: query
+        name: last_name
+        type: string
+      - in: query
+        name: occupation
+        type: string
+      - in: query
+        name: phone_number
+        type: string
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of users
+          schema:
+            $ref: '#/definitions/genproto.UsersGetAllRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List Users
+      tags:
+      - User
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user by their ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete User
+      tags:
+      - User
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a user by their ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User details
+          schema:
+            $ref: '#/definitions/genproto.UserGetRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get User by ID
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Update an existing user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.UserUpdateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update User
+      tags:
+      - User
+  /users/by-email:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a user by their email
+      parameters:
+      - description: User email
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User details
+          schema:
+            $ref: '#/definitions/genproto.UserGetRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get User by Email
+      tags:
+      - User
+  /users/change-password:
+    post:
+      consumes:
+      - application/json
+      description: Change the password for a user
+      parameters:
+      - description: User email and new password
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.UserRecoverPasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Password changed successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Change User Password
+      tags:
+      - User
+  /users/change-photo:
+    post:
+      consumes:
+      - application/json
+      description: Update the profile picture of a user
+      parameters:
+      - description: User photo URL
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.UserCreatePFPReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Profile picture updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Change User Profile Picture
+      tags:
+      - User
+  /users/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Confirm the email address of a user
+      parameters:
+      - description: User email
+        in: query
+        name: email
+        required: true
+        type: string
+      - description: Confirmation code
+        in: query
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User email confirmed successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Confirm User Email
+      tags:
+      - User
+  /users/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.UserCreateReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create User
+      tags:
+      - User
+  /users/email-exists:
+    get:
+      consumes:
+      - application/json
+      description: Check if the provided email already exists
+      parameters:
+      - description: Email address
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Email existence status
+          schema:
+            $ref: '#/definitions/genproto.UserEmailCheckRes'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Check Email Exists
+      tags:
+      - User
 securityDefinitions:
   BearerAuth:
     in: header

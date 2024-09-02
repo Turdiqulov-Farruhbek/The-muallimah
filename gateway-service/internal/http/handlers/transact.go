@@ -75,8 +75,8 @@ func (h *Handler) GetTransaction(c *gin.Context) {
 // @Produce       json
 // @Security      BearerAuth
 // @Param         user_course_id query string false "User Course ID"
-// @Param         amount_from query float false "Amount from"
-// @Param         amount_to query float false "Amount to"
+// @Param         amount_from query float32 false "Amount from"
+// @Param         amount_to query float32 false "Amount to"
 // @Param         type query string false "Transaction type"
 // @Param         user_id query string false "User ID"
 // @Param         course_id query string false "Course ID"

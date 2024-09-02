@@ -140,8 +140,8 @@ func (h *Handler) GetProduct(c *gin.Context) {
 // @Produce json
 // @Security BearerAuth
 // @Param title query string false "Title"
-// @Param price_from query float false "Price from"
-// @Param price_to query float false "Price to"
+// @Param price_from query float32 false "Price from"
+// @Param price_to query float32 false "Price to"
 // @Param limit query int false "Limit"
 // @Param offset query int false "Offset"
 // @Success 200 {object} pb.ProductList "List of products"

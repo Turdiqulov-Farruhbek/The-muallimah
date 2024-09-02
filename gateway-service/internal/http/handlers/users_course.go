@@ -148,7 +148,7 @@ func (h *Handler) DeleteUserCourse(c *gin.Context) {
 // @Param          filter query   pb.Pagination  true  "Pagination data"
 // @Success        200  {object}  pb.UserCourseListsRes "List of user courses"
 // @Failure        400  {string}  string "Invalid request"
-// @Failure        500  {string}  string "Internal server error"
+// @Failure        500  {string}  string "Internal server error"``
 // @Router         /user-courses [get]
 func (h *Handler) ListUserCourses(c *gin.Context) {
 	var req pb.UserCourseListsReq
