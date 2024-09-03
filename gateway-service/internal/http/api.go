@@ -99,14 +99,15 @@ func NewGin(h *handlers.Handler) *gin.Engine {
         lessons.GET("/list", h.ListLessons)
 	}
 
-	// notifications := router.Group("/notification")
-	// {
-	// 	notifications.POST("/create", h.CreateNotification)
-    //     notifications.GET("/:id", h.GetNotification)
-    //     notifications.PUT("/update/:id", h.UpdateNotification)
-    //     notifications.DELETE("/delete/:id", h.DeleteNotification)
-    //     notifications.GET("/list", h.ListNotifications)
-	// }
+	notifications := router.Group("/notification")
+	{
+		notifications.POST("/create", h.CreateNotification)
+        notifications.GET("/:id", h.GetNotification)
+        notifications.PUT("/update/:id", h.UpdateNotification)
+        notifications.DELETE("/delete/:id", h.DeleteNotification)
+        notifications.GET("/list", h.ListNotifications)
+		notifications.POST("/notify-all", h.NotifyAll)
+	}
 
 	orders := router.Group("/orders")
 	{
