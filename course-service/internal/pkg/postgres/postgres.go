@@ -6,7 +6,6 @@ import (
 
 	"gitlab.com/muallimah/course_service/internal/pkg/config"
 	_ "github.com/lib/pq"
-	// "gitlab.com/saladin2098/finance_tracker1/budget/internal/pkg/config"
 )
 
 type Postgres struct {

@@ -20,8 +20,6 @@ definitions:
     type: object
   genproto.UserChangePasswordReq:
     properties:
-      code:
-        type: string
       email:
         type: string
       new_password:
@@ -71,6 +69,32 @@ definitions:
       phone_number:
         type: string
       photo_url:
+        type: string
+    type: object
+  genproto.UserRecoverPasswordReq:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+      new_password:
+        type: string
+    type: object
+  genproto.UserUpdate:
+    properties:
+      address:
+        type: string
+      dob:
+        type: string
+      first_name:
+        type: string
+      gender:
+        type: string
+      last_name:
+        type: string
+      occupation:
+        type: string
+      phone_number:
         type: string
     type: object
   token.Tokens:
@@ -225,7 +249,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/genproto.UserChangePasswordReq'
+          $ref: '#/definitions/genproto.UserRecoverPasswordReq'
       produces:
       - application/json
       responses:
@@ -282,7 +306,7 @@ paths:
       summary: Register a new user
       tags:
       - registration
-  /send-code:
+  /resverify:
     post:
       consumes:
       - application/json
@@ -298,7 +322,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Code sent
           schema:
             type: string
         "401":
@@ -313,8 +337,6 @@ paths:
           description: Server error
           schema:
             type: string
-      security:
-      - BearerAuth: []
       summary: Sends code again if user didn't recieve the code
       tags:
       - password-recovery
@@ -346,6 +368,78 @@ paths:
       security:
       - BearerAuth: []
       summary: Set a profile picture
+      tags:
+      - user
+  /user:
+    put:
+      consumes:
+      - application/json
+      description: Update user's data
+      parameters:
+      - description: User Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.UserUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Error updating User
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update user's profile
+      tags:
+      - user
+  /user-password:
+    put:
+      consumes:
+      - application/json
+      description: Updates the password to new one
+      parameters:
+      - description: Change Password Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/genproto.UserChangePasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Password successfully updated
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "401":
+          description: Incorrect verification code
+          schema:
+            type: string
+        "404":
+          description: Verification code expired or email not found
+          schema:
+            type: string
+        "500":
+          description: Error updating password
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Change password
       tags:
       - user
 securityDefinitions:

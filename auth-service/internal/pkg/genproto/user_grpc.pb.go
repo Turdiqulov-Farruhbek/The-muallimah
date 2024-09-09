@@ -41,7 +41,7 @@ type UserServiceClient interface {
 	GetUserByEmail(ctx context.Context, in *ByEmail, opts ...grpc.CallOption) (*UserGetRes, error)
 	GetUserSecurityByEmail(ctx context.Context, in *ByEmail, opts ...grpc.CallOption) (*UserSecurityRes, error)
 	UpdateUser(ctx context.Context, in *UserUpdateReq, opts ...grpc.CallOption) (*Void, error)
-	ChangeUserPassword(ctx context.Context, in *UserChangePasswordReq, opts ...grpc.CallOption) (*Void, error)
+	ChangeUserPassword(ctx context.Context, in *UserRecoverPasswordReq, opts ...grpc.CallOption) (*Void, error)
 	ChangeUserPFP(ctx context.Context, in *UserChangePFPReq, opts ...grpc.CallOption) (*Void, error)
 	IsEmailExists(ctx context.Context, in *UserEmailCheckReq, opts ...grpc.CallOption) (*UserEmailCheckRes, error)
 	ConfirmUser(ctx context.Context, in *ByEmail, opts ...grpc.CallOption) (*Void, error)
@@ -107,7 +107,7 @@ func (c *userServiceClient) UpdateUser(ctx context.Context, in *UserUpdateReq, o
 	return out, nil
 }
 
-func (c *userServiceClient) ChangeUserPassword(ctx context.Context, in *UserChangePasswordReq, opts ...grpc.CallOption) (*Void, error) {
+func (c *userServiceClient) ChangeUserPassword(ctx context.Context, in *UserRecoverPasswordReq, opts ...grpc.CallOption) (*Void, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Void)
 	err := c.cc.Invoke(ctx, UserService_ChangeUserPassword_FullMethodName, in, out, cOpts...)
@@ -176,7 +176,7 @@ type UserServiceServer interface {
 	GetUserByEmail(context.Context, *ByEmail) (*UserGetRes, error)
 	GetUserSecurityByEmail(context.Context, *ByEmail) (*UserSecurityRes, error)
 	UpdateUser(context.Context, *UserUpdateReq) (*Void, error)
-	ChangeUserPassword(context.Context, *UserChangePasswordReq) (*Void, error)
+	ChangeUserPassword(context.Context, *UserRecoverPasswordReq) (*Void, error)
 	ChangeUserPFP(context.Context, *UserChangePFPReq) (*Void, error)
 	IsEmailExists(context.Context, *UserEmailCheckReq) (*UserEmailCheckRes, error)
 	ConfirmUser(context.Context, *ByEmail) (*Void, error)
@@ -204,7 +204,7 @@ func (UnimplementedUserServiceServer) GetUserSecurityByEmail(context.Context, *B
 func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UserUpdateReq) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedUserServiceServer) ChangeUserPassword(context.Context, *UserChangePasswordReq) (*Void, error) {
+func (UnimplementedUserServiceServer) ChangeUserPassword(context.Context, *UserRecoverPasswordReq) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeUserPassword not implemented")
 }
 func (UnimplementedUserServiceServer) ChangeUserPFP(context.Context, *UserChangePFPReq) (*Void, error) {
@@ -326,7 +326,7 @@ func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _UserService_ChangeUserPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserChangePasswordReq)
+	in := new(UserRecoverPasswordReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -338,7 +338,7 @@ func _UserService_ChangeUserPassword_Handler(srv interface{}, ctx context.Contex
 		FullMethod: UserService_ChangeUserPassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ChangeUserPassword(ctx, req.(*UserChangePasswordReq))
+		return srv.(UserServiceServer).ChangeUserPassword(ctx, req.(*UserRecoverPasswordReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

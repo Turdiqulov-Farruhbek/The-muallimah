@@ -1,7 +1,0 @@
-[submodule "muallimah-submodule"]
-    path = submodules/muallimah-submodule
-    url = git@gitlab.com:acumen5524834/muallimah-submodule.git
-
-[submodule "submodules/muallimah-submodule"]
-	path = submodules/muallimah-submodule
-	url = git@gitlab.com:acumen5524834/muallimah-submodule.git

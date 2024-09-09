@@ -19,45 +19,45 @@ type Storage struct {
 
 func NewStorage(db *sql.DB) *Storage {
 	return &Storage{
-        CategoryS:    NewCategoryRepo(db),
-        CertificateS: NewCertificateRepo(db),
-        CourseS:      NewCourseRepo(db),
-        LessonS:      NewLessonRepo(db),
-        MaterialS:    NewMaterialRepo(db),
-        TransactionS: NewTransactionRepo(db),
-        UserCourseS:  NewUserCourseRepo(db),
-        UserLessonS:  NewUserLessonRepo(db),
-    }
+		CategoryS:    NewCategoryRepo(db),
+		CertificateS: NewCertificateRepo(db),
+		CourseS:      NewCourseRepo(db),
+		LessonS:      NewLessonRepo(db),
+		MaterialS:    NewMaterialRepo(db),
+		TransactionS: NewTransactionRepo(db),
+		UserCourseS:  NewUserCourseRepo(db),
+		UserLessonS:  NewUserLessonRepo(db),
+	}
 }
 
 func (s *Storage) Category() storage.CategoryI {
-    return s.CategoryS
+	return s.CategoryS
 }
 
 func (s *Storage) Certificate() storage.CertificateI {
-    return s.CertificateS
+	return s.CertificateS
 }
 
 func (s *Storage) Course() storage.CourseI {
-    return s.CourseS
+	return s.CourseS
 }
 
 func (s *Storage) Lesson() storage.LessonI {
-    return s.LessonS
+	return s.LessonS
 }
 
 func (s *Storage) Material() storage.MaterialI {
-    return s.MaterialS
+	return s.MaterialS
 }
 
 func (s *Storage) Transaction() storage.TransactionI {
-    return s.TransactionS
+	return s.TransactionS
 }
 
 func (s *Storage) UserCourse() storage.UserCourseI {
-    return s.UserCourseS
+	return s.UserCourseS
 }
 
 func (s *Storage) UserLesson() storage.UserLessonI {
-    return s.UserLessonS
+	return s.UserLessonS
 }

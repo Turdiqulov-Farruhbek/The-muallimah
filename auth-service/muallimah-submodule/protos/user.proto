@@ -13,7 +13,7 @@ service UserService {
     rpc GetUserByEmail(ByEmail) returns (UserGetRes);
     rpc GetUserSecurityByEmail(ByEmail) returns (UserSecurityRes);
     rpc UpdateUser(UserUpdateReq) returns (Void);
-    rpc ChangeUserPassword(UserChangePasswordReq) returns (Void);
+    rpc ChangeUserPassword(UserRecoverPasswordReq) returns (Void);
     rpc ChangeUserPFP(UserChangePFPReq) returns (Void);
     rpc IsEmailExists(UserEmailCheckReq) returns (UserEmailCheckRes);
     rpc ConfirmUser(ByEmail) returns (Void);
@@ -78,7 +78,6 @@ message UserUpdate {
     string occupation = 5;
     string address = 6;
     string gender = 7;
-    string photo_url = 8;
 }
 
 message UserUpdateReq {
@@ -86,10 +85,15 @@ message UserUpdateReq {
     UserUpdate body = 2;
 }
 
-message UserChangePasswordReq {
+message UserRecoverPasswordReq {
     string email = 1;
     string code = 2;
     string new_password = 3;
+}
+
+message UserChangePasswordReq {
+    string email = 1;
+    string new_password = 2;
 }
 
 message UserChangePFPReq{
@@ -147,4 +151,4 @@ message UserSecurityRes{
 message LoginReq {
     string email = 1;
     string password = 2;
-}
+} 

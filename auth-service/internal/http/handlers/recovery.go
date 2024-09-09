@@ -45,7 +45,7 @@ func (h *HTTPHandler) ForgotPassword(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
-	err = config.SendConfirmationCode(user.Email)
+	err = config.SendConfirmationCode(user.Email, h.Logger)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code to email", "err": err.Error()})
 		return
@@ -60,7 +60,7 @@ func (h *HTTPHandler) ForgotPassword(c *gin.Context) {
 // @Tags password-recovery
 // @Accept json
 // @Produce json
-// @Param request body pb.UserChangePasswordReq true "Recover Password Request"
+// @Param request body pb.UserRecoverPasswordReq true "Recover Password Request"
 // @Success 200 {object} string "Password successfully updated"
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 401 {object} string "Incorrect verification code"
@@ -68,7 +68,7 @@ func (h *HTTPHandler) ForgotPassword(c *gin.Context) {
 // @Failure 500 {object} string "Error updating password"
 // @Router /recover-password [post]
 func (h *HTTPHandler) RecoverPassword(c *gin.Context) {
-	var req pb.UserChangePasswordReq
+	var req pb.UserRecoverPasswordReq
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Invalid request payload": err.Error()})
 		return
@@ -103,7 +103,7 @@ func (h *HTTPHandler) RecoverPassword(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't hash your password", "details": err.Error()})
 		return
 	}
-	_, err = h.US.ChangeUserPassword(c, &pb.UserChangePasswordReq{Email: req.Email, NewPassword: hashedPassword})
+	_, err = h.US.ChangeUserPassword(c, &pb.UserRecoverPasswordReq{Email: req.Email, NewPassword: hashedPassword})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error updating password", "details": err.Error()})
 		return
@@ -120,12 +120,11 @@ func (h *HTTPHandler) RecoverPassword(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param credentials body pb.ByEmail true "User login credentials"
-// @Success 200 {object} string ""
+// @Success 200 {object} string "Code sent"
 // @Failure 401 {object} string "Unauthorized"
 // @Failure 404 {object} string "Page not found"
 // @Failure 500 {object} string "Server error"
-// @Security BearerAuth
-// @Router /send-code [POST]
+// @Router /resverify [POST]
 func (h *HTTPHandler) SendCodeAgain(c *gin.Context) {
 	var req pb.ByEmail
 	if err := c.BindJSON(&req); err != nil {
@@ -148,7 +147,7 @@ func (h *HTTPHandler) SendCodeAgain(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
-	err = config.SendConfirmationCode(user.Email)
+	err = config.SendConfirmationCode(user.Email, h.Logger)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code to email", "err": err.Error()})
 		return

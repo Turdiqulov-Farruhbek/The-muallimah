@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	signingKey = "mrbek"
+	signingKey = "secret_key"
 )
 
 type Tokens struct {

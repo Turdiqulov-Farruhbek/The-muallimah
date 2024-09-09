@@ -10,6 +10,7 @@ import (
 	"gitlab.com/muallimah/course_service/internal/usecase/kafka"
 	"gitlab.com/muallimah/course_service/internal/usecase/minio"
 	pdfmaker "gitlab.com/muallimah/course_service/internal/usecase/pdf_maker"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 type CertificateService struct {
@@ -19,7 +20,7 @@ type CertificateService struct {
 	pb.UnimplementedCertificateServiceServer
 }
 
-func NewCertificateService(stg storage.StorageI) *CertificateService {
+func NewCertificateService(stg storage.StorageI, kafka kafka.KafkaProducer, minio *minio.MinIO) *CertificateService {
 	return &CertificateService{stg: stg}
 }
 
@@ -30,7 +31,7 @@ func (s *CertificateService) GetCertificate(c context.Context, id *pb.ById) (*pb
 	return s.stg.Certificate().GetCertificate(id)
 }
 func (s *CertificateService) UpdateCertificate(c context.Context, req *pb.CertificateUpdate) (*pb.Void, error) {
-	///  DO NOT FORGET TO ADD API TO CREATE CERTIFICATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// ///  DO NOT FORGET TO ADD API TO CREATE CERTIFICATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	certificate, err := s.stg.Certificate().GetCertificate(&pb.ById{Id: req.Id})
 	if err != nil {
 		return nil, errors.New("internal usecases certificate get certificate error: " + err.Error())
@@ -52,8 +53,19 @@ func (s *CertificateService) UpdateCertificate(c context.Context, req *pb.Certif
 		req.Body.FileUrl = *cer_url
 	}
 	// write to kafka
-	message := fmt.Sprintf("dear %s your certificate request has been %s",certificate.UserCourse.User.FirstName,req.Body.Status)
-	input,err := 
+	message := fmt.Sprintf("dear %s your certificate request has been %s", certificate.UserCourse.User.FirstName, req.Body.Status)
+	notification := pb.NotificationCreate{
+		RecieverId: certificate.UserCourse.User.Id,
+		Message:     message,
+	}
+	input, err := protojson.Marshal(&notification)
+	if err!= nil {
+        return nil, errors.New("internal usecases protojson marshal error: " + err.Error())
+    }
+	err = s.producer.ProduceMessages("notification-create", input)
+	if err!= nil {
+        return nil, errors.New("internal usecases kafka produce error: " + err.Error())
+    }
 
 	return s.stg.Certificate().UpdateCertificate(req)
 }

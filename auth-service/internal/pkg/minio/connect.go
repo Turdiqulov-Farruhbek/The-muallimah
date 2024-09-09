@@ -15,9 +15,9 @@ type MinioClient struct {
 }
 
 func NewMinioClient() (*MinioClient, error) {
-	endpoint := "localhost:9000"
-	accessKeyID := "user"
-	secretAccessKey := "password"
+	endpoint := "minio:9000"
+	accessKeyID := "saladin2098"
+	secretAccessKey := "minio_pass"
 	useSSL := false
 
 	minioClient, err := minio.New(endpoint, &minio.Options{

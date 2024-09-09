@@ -17,7 +17,7 @@ type UserI interface {
 	GetUserByID(context.Context, *pb.ById) (*pb.UserGetRes, error)
 	GetUserByEmail(context.Context, *pb.ByEmail) (*pb.UserGetRes, error)
 	UpdateUser(context.Context, *pb.UserUpdateReq) (*pb.Void, error)
-	ChangeUserPassword(context.Context, *pb.UserChangePasswordReq) (*pb.Void, error)
+	ChangeUserPassword(context.Context, *pb.UserRecoverPasswordReq) (*pb.Void, error)
 	DeleteUser(context.Context, *pb.ById) (*pb.Void, error)
 	ListUsers(context.Context, *pb.UsersGetAllReq) (*pb.UsersGetAllRes, error)
 	IsEmailExists(context.Context, *pb.UserEmailCheckReq) (*pb.UserEmailCheckRes, error)

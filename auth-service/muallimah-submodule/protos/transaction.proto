@@ -16,6 +16,8 @@ service TransactionService {
     rpc CreateTransaction(TransactionCreateReq) returns (Void);
     rpc GetTransaction(ById) returns (TransactionGetRes);
     rpc ListTransactions(TransactionListReq) returns (TransactionListRes);
+    rpc GetBalance(ById) returns (BalanceGetRes);
+
 }
 
 message TransactionCreateReq {
@@ -45,4 +47,16 @@ message TransactionListReq {
 
 message TransactionListRes {
     repeated TransactionGetRes transactions = 1;
+}
+
+message BalanceGetRes {
+    float balance = 1;
+    bool get_usage = 2;
+    Stats usage = 3;
+
+    message Stats {
+        float shop_spendings = 2;
+        float course_spendings = 3;
+        float payments = 4;   
+    }
 }

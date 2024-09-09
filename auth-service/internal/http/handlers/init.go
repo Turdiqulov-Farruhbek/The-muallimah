@@ -12,9 +12,10 @@ import (
 )
 
 type HTTPHandler struct {
-	RDB   *rdb.RedisClient
-	Minio *minio_connect.MinioClient
-	US    pb.UserServiceClient
+	Logger *l.Logger
+	RDB    *rdb.RedisClient
+	Minio  *minio_connect.MinioClient
+	US     pb.UserServiceClient
 }
 
 func NewHandler(us *grpc.ClientConn, logger *l.Logger) *HTTPHandler {
@@ -29,8 +30,9 @@ func NewHandler(us *grpc.ClientConn, logger *l.Logger) *HTTPHandler {
 	}
 
 	return &HTTPHandler{
-		RDB:   db,
-		US:    pb.NewUserServiceClient(us),
-		Minio: mc,
+		Logger: logger,
+		RDB:    db,
+		US:     pb.NewUserServiceClient(us),
+		Minio:  mc,
 	}
 }

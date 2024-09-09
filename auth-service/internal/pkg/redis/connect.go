@@ -13,7 +13,7 @@ type RedisClient struct {
 
 func NewRedisClient(c context.Context) (*RedisClient, error) {
 	rdb := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: "redis:6379",
 		DB:   0,
 	})
 	if _, err := rdb.Ping(c).Result(); err != nil {

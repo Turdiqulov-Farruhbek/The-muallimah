@@ -31,10 +31,10 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CategoryServiceClient interface {
 	CreateCategory(ctx context.Context, in *CategoryCreateReq, opts ...grpc.CallOption) (*Void, error)
-	GetCategory(ctx context.Context, in *ById, opts ...grpc.CallOption) (*CategoryGetRes, error)
+	GetCategory(ctx context.Context, in *ById, opts ...grpc.CallOption) (*Category, error)
 	UpdateCategory(ctx context.Context, in *CategoryUpdateReq, opts ...grpc.CallOption) (*Void, error)
 	DeleteCategory(ctx context.Context, in *ById, opts ...grpc.CallOption) (*Void, error)
-	ListCategories(ctx context.Context, in *CategoryListsReq, opts ...grpc.CallOption) (*CategoryListsRes, error)
+	ListCategories(ctx context.Context, in *Pagination, opts ...grpc.CallOption) (*CategoryListRes, error)
 }
 
 type categoryServiceClient struct {
@@ -55,9 +55,9 @@ func (c *categoryServiceClient) CreateCategory(ctx context.Context, in *Category
 	return out, nil
 }
 
-func (c *categoryServiceClient) GetCategory(ctx context.Context, in *ById, opts ...grpc.CallOption) (*CategoryGetRes, error) {
+func (c *categoryServiceClient) GetCategory(ctx context.Context, in *ById, opts ...grpc.CallOption) (*Category, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CategoryGetRes)
+	out := new(Category)
 	err := c.cc.Invoke(ctx, CategoryService_GetCategory_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -85,9 +85,9 @@ func (c *categoryServiceClient) DeleteCategory(ctx context.Context, in *ById, op
 	return out, nil
 }
 
-func (c *categoryServiceClient) ListCategories(ctx context.Context, in *CategoryListsReq, opts ...grpc.CallOption) (*CategoryListsRes, error) {
+func (c *categoryServiceClient) ListCategories(ctx context.Context, in *Pagination, opts ...grpc.CallOption) (*CategoryListRes, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CategoryListsRes)
+	out := new(CategoryListRes)
 	err := c.cc.Invoke(ctx, CategoryService_ListCategories_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -100,10 +100,10 @@ func (c *categoryServiceClient) ListCategories(ctx context.Context, in *Category
 // for forward compatibility
 type CategoryServiceServer interface {
 	CreateCategory(context.Context, *CategoryCreateReq) (*Void, error)
-	GetCategory(context.Context, *ById) (*CategoryGetRes, error)
+	GetCategory(context.Context, *ById) (*Category, error)
 	UpdateCategory(context.Context, *CategoryUpdateReq) (*Void, error)
 	DeleteCategory(context.Context, *ById) (*Void, error)
-	ListCategories(context.Context, *CategoryListsReq) (*CategoryListsRes, error)
+	ListCategories(context.Context, *Pagination) (*CategoryListRes, error)
 	mustEmbedUnimplementedCategoryServiceServer()
 }
 
@@ -114,7 +114,7 @@ type UnimplementedCategoryServiceServer struct {
 func (UnimplementedCategoryServiceServer) CreateCategory(context.Context, *CategoryCreateReq) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCategory not implemented")
 }
-func (UnimplementedCategoryServiceServer) GetCategory(context.Context, *ById) (*CategoryGetRes, error) {
+func (UnimplementedCategoryServiceServer) GetCategory(context.Context, *ById) (*Category, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCategory not implemented")
 }
 func (UnimplementedCategoryServiceServer) UpdateCategory(context.Context, *CategoryUpdateReq) (*Void, error) {
@@ -123,7 +123,7 @@ func (UnimplementedCategoryServiceServer) UpdateCategory(context.Context, *Categ
 func (UnimplementedCategoryServiceServer) DeleteCategory(context.Context, *ById) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCategory not implemented")
 }
-func (UnimplementedCategoryServiceServer) ListCategories(context.Context, *CategoryListsReq) (*CategoryListsRes, error) {
+func (UnimplementedCategoryServiceServer) ListCategories(context.Context, *Pagination) (*CategoryListRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListCategories not implemented")
 }
 func (UnimplementedCategoryServiceServer) mustEmbedUnimplementedCategoryServiceServer() {}
@@ -212,7 +212,7 @@ func _CategoryService_DeleteCategory_Handler(srv interface{}, ctx context.Contex
 }
 
 func _CategoryService_ListCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CategoryListsReq)
+	in := new(Pagination)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -224,7 +224,7 @@ func _CategoryService_ListCategories_Handler(srv interface{}, ctx context.Contex
 		FullMethod: CategoryService_ListCategories_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CategoryServiceServer).ListCategories(ctx, req.(*CategoryListsReq))
+		return srv.(CategoryServiceServer).ListCategories(ctx, req.(*Pagination))
 	}
 	return interceptor(ctx, in, info, handler)
 }

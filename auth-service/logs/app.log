@@ -1,4 +1,33 @@
-2024-08-27 16:05:28 ERROR run.go:21 Postgres not connected due to error: pq: password authentication failed for user "mrbek"
-2024-08-27 16:10:49 ERROR run.go:21 Postgres not connected due to error: pq: database "muallimah_auth" does not exist
-2024-08-27 16:11:19 INFO run.go:21 Postgres connected
-2024-08-27 16:11:19 INFO run.go:21 gRPC server is running on port  :50050
+2024-08-27 20:01:47 INFO run.go:21 Postgres connected
+2024-08-27 20:01:47 INFO run.go:21 gRPC server is running on port  :50050
+2024-08-27 20:06:20 INFO run.go:21 Postgres connected
+2024-08-27 20:06:20 INFO run.go:21 gRPC server is running on port  :50050
+2024-08-27 20:07:35 INFO run.go:21 Postgres connected
+2024-08-27 20:07:35 INFO run.go:21 gRPC server is running on port  :50050
+2024-08-27 20:07:56 INFO run.go:21 Postgres connected
+2024-08-27 20:07:56 INFO run.go:21 gRPC server is running on port  :50050
+2024-08-27 20:08:43 INFO run.go:21 Postgres connected
+2024-08-27 20:08:43 INFO run.go:21 gRPC server is running on port  :50050
+2024-08-27 20:09:31 INFO run.go:21 Postgres connected
+2024-08-27 20:09:31 INFO run.go:21 gRPC server is running on port  :50050
+2024-08-27 20:37:58 INFO run.go:21 Postgres connected
+2024-08-27 20:37:58 INFO run.go:21 gRPC server is running on port  :50050
+2024-08-27 20:41:36 INFO run.go:21 Postgres connected
+2024-08-27 20:41:36 INFO run.go:21 gRPC server is running on port  :50050
+2024-08-27 20:41:41 INFO run.go:21 Postgres connected
+2024-08-27 20:41:41 INFO run.go:21 gRPC server is running on port  :50050
+2024-08-27 20:42:24 INFO run.go:21 Postgres connected
+2024-08-27 20:42:24 INFO run.go:21 gRPC server is running on port  :50050
+2024-08-27 20:43:23 INFO run.go:21 Postgres connected
+2024-08-27 20:43:23 INFO run.go:21 gRPC server is running on port  :50050
+2024-09-04 14:27:06 INFO run.go:21 Postgres connected
+2024-09-04 14:27:06 INFO run.go:21 gRPC server is running on port  :50050
+2024-09-04 14:30:09 INFO run.go:21 Postgres connected
+2024-09-04 14:30:09 INFO run.go:21 gRPC server is running on port  :50050
+2024-09-04 14:36:24 INFO run.go:21 Postgres connected
+2024-09-04 14:36:24 ERROR run.go:21 Failed to listen gRPC server:  listen tcp :50050: bind: address already in use
+2024-09-04 14:36:57 INFO run.go:21 Postgres connected
+2024-09-04 14:36:57 INFO run.go:21 gRPC server is running on port  :50051
+2024-09-04 14:36:57 INFO run.go:21 New account registered to the system:  qodirovazizbek249@gmail.com
+2024-09-04 14:44:25 INFO run.go:21 Postgres connected
+2024-09-04 14:44:25 INFO run.go:21 gRPC server is running on port  :50051

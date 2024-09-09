@@ -43,7 +43,7 @@ func (u *UserService) UpdateUser(ctx context.Context, req *pb.UserUpdateReq) (*p
 	return u.stg.User().UpdateUser(ctx, req)
 }
 
-func (u *UserService) ChangeUserPassword(ctx context.Context, req *pb.UserChangePasswordReq) (*pb.Void, error) {
+func (u *UserService) ChangeUserPassword(ctx context.Context, req *pb.UserRecoverPasswordReq) (*pb.Void, error) {
 	return u.stg.User().ChangeUserPassword(ctx, req)
 }
 

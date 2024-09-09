@@ -2,7 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -225,36 +224,29 @@ func (r *productRepo) AddPicture(ctx context.Context, productpic *entity.Product
 	return nil
 }
 func (r *productRepo) DeletePicture(ctx context.Context, productpic *entity.ProductPicture) error {
-	// Validate the ProductId to ensure it's a valid MongoDB ObjectID
-	if !primitive.IsValidObjectID(productpic.ProductId) {
-		return errors.New("invalid ObjectID format")
-	}
-
-	// Convert ProductId string to MongoDB ObjectID
 	objID, err := primitive.ObjectIDFromHex(productpic.ProductId)
 	if err != nil {
 		return err
 	}
 
-	// Define the filter for the document to be updated
 	filter := bson.M{
-		"_id":          objID,
-		"picture_urls": productpic.PictureUrl,
-		"DeletedAt":    0,
+		"_id":       objID,
+		"DeletedAt": 0,
 	}
 
-	// Update the document to set the DeletedAt timestamp
-	res, err := r.col.UpdateOne(ctx, filter, bson.M{"$set": bson.M{"DeletedAt": time.Now().Unix()}})
+	update := bson.M{
+		"$pull": bson.M{"PictureUrls": productpic.PictureUrl},
+	}
+
+	res, err := r.col.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return err
 	}
 
-	// Check if any document was matched and updated
 	if res.MatchedCount == 0 {
 		return mongo.ErrNoDocuments
 	}
 
-	// Log the successful deletion
 	log.Println("Picture deleted for product ID:", productpic.ProductId)
 
 	return nil

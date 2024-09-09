@@ -1,17 +1,19 @@
 package app
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
 	"time"
 
 	"gitlab.com/acumen5524834/shop-service/internal/delivery/grpc/server"
 	"gitlab.com/acumen5524834/shop-service/internal/delivery/grpc/services"
-	"gitlab.com/acumen5524834/shop-service/internal/infrastructure/grpc_service_clients"
 	mdb "gitlab.com/acumen5524834/shop-service/internal/infrastructure/repository/mongo"
 	"gitlab.com/acumen5524834/shop-service/internal/pkg/config"
 	"gitlab.com/acumen5524834/shop-service/internal/pkg/genproto"
 	mongosh "gitlab.com/acumen5524834/shop-service/internal/pkg/mongo"
-	"gitlab.com/acumen5524834/shop-service/internal/usecase"
+	usecase "gitlab.com/acumen5524834/shop-service/internal/usecase/service"
+	"go.mongodb.org/mongo-driver/mongo"
 
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpcrecovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -21,25 +23,33 @@ import (
 )
 
 type App struct {
-	Config         *config.Config
-	Logger         *zap.Logger
-	DB             *mongosh.MongoDB
-	GrpcServer     *grpc.Server
-	ServiceClients grpc_service_clients.ServiceClients
+	Config     *config.Config
+	Logger     *zap.Logger
+	DB         *mongosh.MongoDB
+	Postg      *sql.DB
+	GrpcServer *grpc.Server
 }
 
 func NewApp(cfg *config.Config) (*App, error) {
+	// Initialize MongoDB connection
+	mongoDB, err := mongosh.NewMongoDB()
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to MongoDB: %w", err)
+	}
+
+	// Initialize PostgreSQL connection
+	pgm, err := mongosh.New(cfg)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to PostgreSQL: %w", err)
+	}
+
+	// Initialize logger
 	logger, err := zap.NewProduction()
 	if err != nil {
 		return nil, fmt.Errorf("failed to initialize logger: %w", err)
 	}
 
-	db, err := mongosh.NewMongoDB()
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to database: %w", err)
-	}
-
-	// grpc server init
+	// Initialize gRPC server with middleware
 	grpcServer := grpc.NewServer(
 		grpc.StreamInterceptor(grpcmiddleware.ChainStreamServer(
 			grpcctxtags.StreamServerInterceptor(),
@@ -56,10 +66,10 @@ func NewApp(cfg *config.Config) (*App, error) {
 	return &App{
 		Config:     cfg,
 		Logger:     logger,
-		DB:         db,
+		DB:         mongoDB,
+		Postg:      pgm.DB,
 		GrpcServer: grpcServer,
 	}, nil
-
 }
 
 func (a *App) Run() error {
@@ -68,59 +78,58 @@ func (a *App) Run() error {
 	}
 
 	if a.DB == nil {
-		return fmt.Errorf("database connection is nil")
+		return fmt.Errorf("mongo database connection is nil")
 	}
 
-	// context timeout initialization
+	if a.Postg == nil {
+		return fmt.Errorf("postgres database connection is nil")
+	}
+
+	// Context timeout initialization
 	contextTimeout, err := time.ParseDuration(a.Config.Context.Timeout)
 	if err != nil {
 		return fmt.Errorf("error during parse duration for context timeout: %w", err)
 	}
 
-	// Initialize Service Clients
-	serviceClients, err := grpc_service_clients.New(a.Config)
-	if err != nil {
-		return fmt.Errorf("error during initialize service clients: %w", err)
-	}
-	a.ServiceClients = serviceClients
-
-	// repositories initialization
-	if a.DB.Database == nil {
-		return fmt.Errorf("database is nil")
-	}
-
+	// Repository initialization
 	bookRepo := mdb.NewBookManager(a.DB.Database)
 	postRepo := mdb.NewPostManager(a.DB.Database)
 	productRepo := mdb.NewProductManager(a.DB.Database)
 
-	// useCase initialization
+	// UseCase initialization
 	bookUseCase := usecase.NewBookService(contextTimeout, bookRepo)
 	postUseCase := usecase.NewPostService(contextTimeout, postRepo)
 	productUseCase := usecase.NewProductService(contextTimeout, productRepo)
 
-	genproto.RegisterBookServiceServer(a.GrpcServer, services.NewRPC(a.Logger, bookUseCase, &a.ServiceClients))
-	genproto.RegisterPostServiceServer(a.GrpcServer, services.NewPostRPC(a.Logger, postUseCase, &a.ServiceClients))
-	genproto.RegisterProductServiceServer(a.GrpcServer, services.NewProductRPC(a.Logger, productUseCase, &a.ServiceClients))
+	// Register gRPC services
+	genproto.RegisterBookServiceServer(a.GrpcServer, services.NewRPC(a.Logger, bookUseCase))
+	genproto.RegisterPostServiceServer(a.GrpcServer, services.NewPostRPC(a.Logger, postUseCase))
+	genproto.RegisterProductServiceServer(a.GrpcServer, services.NewProductRPC(a.Logger, productUseCase))
+	genproto.RegisterOrderServiceServer(a.GrpcServer, services.NewOrderService(mdb.NewOrderRepository(a.Postg,&mongo.Client{})))
+
+	// Start gRPC server
 	a.Logger.Info("gRPC Server Listening", zap.String("url", a.Config.RPCPort))
 	if err := server.Run(a.Config, a.GrpcServer); err != nil {
-		return fmt.Errorf("gRPC failed to serve grpc server over %s: %w", a.Config.RPCPort, err)
+		return fmt.Errorf("gRPC failed to serve over %s: %w", a.Config.RPCPort, err)
 	}
 
 	return nil
 }
 
 func (a *App) Stop() {
-	// closing client service connections
-	a.ServiceClients.Close()
-	// stop gRPC server
+	// Stop gRPC server
 	a.GrpcServer.Stop()
 
-	// database connection
+	// Close MongoDB connection
 	a.DB.Close()
 
-	// zap logger sync
-	err := a.Logger.Sync()
-	if err != nil {
-		return
+	// Sync logger
+	if err := a.Logger.Sync(); err != nil {
+		log.Printf("failed to sync logger: %v", err)
+	}
+
+	// Close PostgreSQL connection
+	if err := a.Postg.Close(); err != nil {
+		log.Printf("failed to close PostgreSQL connection: %v", err)
 	}
 }

@@ -66,12 +66,12 @@ func (u *UserManager) GetUserByEmail(ctx context.Context, req *pb.ByEmail) (*pb.
 func (u *UserManager) UpdateUser(ctx context.Context, req *pb.UserUpdateReq) (*pb.Void, error) {
 	query := `
 		UPDATE users SET first_name = $1, last_name = $2, dob = $3, phone_number = $4, occupation = $5, 
-		                  address = $6, gender = $7, photo_url = $8
+		                  address = $6, gender = $7 updated_at = CURRENT_TIMESTAMP
 		WHERE id = $9 AND deleted_at=0
 	`
 
 	_, err := u.PgClient.ExecContext(ctx, query, req.Body.FirstName, req.Body.LastName, req.Body.Dob, req.Body.PhoneNumber,
-		req.Body.Occupation, req.Body.Address, req.Body.Gender, req.Body.PhotoUrl, req.Id,
+		req.Body.Occupation, req.Body.Address, req.Body.Gender, req.Id,
 	)
 
 	if err != nil {
@@ -80,9 +80,9 @@ func (u *UserManager) UpdateUser(ctx context.Context, req *pb.UserUpdateReq) (*p
 	return nil, nil
 }
 
-func (u *UserManager) ChangeUserPassword(ctx context.Context, req *pb.UserChangePasswordReq) (*pb.Void, error) {
+func (u *UserManager) ChangeUserPassword(ctx context.Context, req *pb.UserRecoverPasswordReq) (*pb.Void, error) {
 	query := `
-		UPDATE users SET password = $1
+		UPDATE users SET password = $1, updated_at = CURRENT_TIMESTAMP
 		WHERE email = $2 AND deleted_at=0
 	`
 
@@ -95,7 +95,7 @@ func (u *UserManager) ChangeUserPassword(ctx context.Context, req *pb.UserChange
 
 func (u *UserManager) DeleteUser(ctx context.Context, req *pb.ById) (*pb.Void, error) {
 	query := `
-		UPDATE users SET deleted_at = 1 WHERE id = $1
+		UPDATE users SET deleted_at = EXTRACT(EPOCH FROM NOW) WHERE id = $1
 	`
 	_, err := u.PgClient.ExecContext(ctx, query, req.Id)
 	if err != nil {
@@ -240,7 +240,7 @@ func (u *UserManager) ConfirmUser(ctx context.Context, req *pb.ByEmail) (*pb.Voi
 }
 
 func (u *UserManager) ChangeUserPFP(ctx context.Context, req *pb.UserChangePFPReq) (*pb.Void, error) {
-	query := `UPDATE users SET photo_url = $1 WHERE email = $2 AND deleted_at=0`
+	query := `UPDATE users SET photo_url = $1, updated_at = CURRENT_TIMESTAMP WHERE email = $2 AND deleted_at=0`
 	_, err := u.PgClient.ExecContext(ctx, query, req.PhotoUrl, req.Email)
 	if err != nil {
 		return nil, err

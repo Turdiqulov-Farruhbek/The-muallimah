@@ -20,6 +20,6 @@ func ConnectDB(cf *config.Config, logger *l.Logger) (*sql.DB, error) {
 		logger.ERROR.Panicln("Postgres not connected due to error: " + err.Error())
 	}
 	logger.INFO.Println("Postgres connected")
-	
+
 	return db, nil
 }

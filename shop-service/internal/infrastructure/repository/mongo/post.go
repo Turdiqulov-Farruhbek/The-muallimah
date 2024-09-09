@@ -207,34 +207,33 @@ func (r *postRepo) AddPostPicture(ctx context.Context, postpic *entity.PostPictu
 	return nil
 }
 func (r *postRepo) DeletePostPicture(ctx context.Context, postpic *entity.PostPicture) error {
-    deletedAt := time.Now().Unix()
-
-    filter := bson.M{
-		"Post_id":      postpic.PostID,
-		"Picture_urls": postpic.PictureUrl,
-		"DeletedAt":    bson.M{"$exists": true, "$eq": 0},
+    objID, err := primitive.ObjectIDFromHex(postpic.PostID)
+	if err != nil {
+		return err
 	}
-	
 
-    update := bson.M{
-        "$set": bson.M{
-            "DeletedAt": deletedAt,
-        },
-    }
+	filter := bson.M{
+		"_id":       objID,
+		"DeletedAt": 0,
+	}
 
-    res, err := r.col.UpdateOne(ctx, filter, update)
-    if err != nil {
-        return fmt.Errorf("failed to delete post picture: %w", err)
-    }
+	update := bson.M{
+		"$pull": bson.M{"PictureUrls": postpic.PictureUrl},
+	}
 
-    if res.MatchedCount == 0 {
-        return mongo.ErrNoDocuments
-    }
+	res, err := r.col.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return err
+	}
 
-    log.Println("Picture deleted for post ID:", postpic.PostID)
-    return nil
+	if res.MatchedCount == 0 {
+		return mongo.ErrNoDocuments
+	}
+
+	log.Println("Picture deleted for post ID:", postpic.PostID)
+
+	return nil
 }
-
 
 
 

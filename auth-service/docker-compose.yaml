@@ -1,4 +1,4 @@
-version: '3.8'
+# version: '4.0'
 
 services:
   auth-service:
@@ -7,81 +7,9 @@ services:
     ports:
       - "8088:8088"
     networks:
-      - global-network
+      - muallimah
     depends_on:
-      - postgres-db
-      - mongo-db
       - redis
-
-  migrate:
-    image: migrate/migrate
-    networks:
-      - global-network
-    volumes:
-      - ./migrations:/migrations
-    command: [ "-path", "/migrations", "-database",  
-                "postgres://postgres:root@delivery_auth:5432/delivery_auth_db?sslmode=disable", 
-                "up" ]
-    depends_on:
-      - postgres-db
-
-  postgres-db:
-    container_name: delivery_auth
-    image: postgres:latest
-    environment:
-      PGUSER: postgres
-      POSTGRES_PASSWORD: root
-      # PGDATA: /data/postgres
-      POSTGRES_DB: delivery_auth_db
-    volumes:
-      - db:/post-database/post-memory
-    ports:
-      - "5433:5432"
-    networks:
-      - global-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d postgres"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
-
-  mongo-db:
-    container_name: mongo_db
-    image: mongo:latest
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: mongo
-      MONGO_INITDB_ROOT_PASSWORD: root
-    ports:
-      - "27018:27017"
-    networks:
-      - global-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "mongo --eval 'db.runCommand({ ping: 1 })'"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-  
-
-  minio:
-    container_name: minio
-    image: quay.io/minio/minio:latest
-    volumes:
-      - minio:/data
-    ports:
-      - 9000:9000
-      - 9001:9001
-    environment:
-      MINIO_ROOT_USER: 'user'
-      MINIO_ROOT_PASSWORD: 'password'
-      MINIO_ADDRESS: ':9000'
-      MINIO_CONSOLE_ADDRESS: ':9001'
-    command: minio server /data
-    networks:
-      - global-network
-
 
   redis:
     image: redis:latest
@@ -91,31 +19,13 @@ services:
     volumes:
       - redis-data:/data
     networks:
-      - global-network
-
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:management
-    environment:
-      RABBITMQ_DEFAULT_USER: rabbitmq
-      RABBITMQ_DEFAULT_PASS: rabbitmq
-    ports:
-      - "5673:5672"
-      - "15673:15672"
-    networks:
-      - global-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      - muallimah
 
 
 networks:
-  global-network:
+  muallimah:
     external: true
-    name: global-network
+    name: muallimah
     driver: bridge
 
 volumes:

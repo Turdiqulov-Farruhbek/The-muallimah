@@ -4,13 +4,13 @@ run:
 	fi && go mod tidy && clear && go run main.go
 
 migrate_up:
-	migrate -path muallimah-submodule/migrations -database postgres://postgres:root@localhost:5432/muallimah_auth_db -verbose up
+	migrate -path muallimah-submodule/migrations -database postgres://mrbek:QodirovCoder@localhost:5432/muallimah_db -verbose up
 
 migrate_down:
-	migrate -path muallimah-submodule/migrations -database postgres://postgres:root@localhost:5432/muallimah_auth_db -verbose down
+	migrate -path muallimah-submodule/migrations -database postgres://mrbek:QodirovCoder@localhost:5432/muallimah_db -verbose down
 
 migrate_force:
-	migrate -path muallimah-submodule/migrations -database postgres://postgres:root@localhost:5432/muallimah_auth_db -verbose force 1
+	migrate -path muallimah-submodule/migrations -database postgres://mrbek:QodirovCoder@localhost:5432/muallimah_db -verbose force 1
 
 migrate_file:
 	migrate create -ext sql -dir muallimah-submodule/migrations -seq create_table

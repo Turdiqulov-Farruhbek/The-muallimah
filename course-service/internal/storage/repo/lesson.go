@@ -8,7 +8,6 @@ import (
 
 	"github.com/google/uuid"
 	pb "gitlab.com/muallimah/course_service/internal/pkg/genproto"
-
 )
 
 type LessonRepo struct {
@@ -90,7 +89,7 @@ func (r *LessonRepo) UpdateLesson(req *pb.LessonUpdate) error {
 		return fmt.Errorf("at least one field should be updated")
 	}
 	query += ", " + strings.Join(cons, ", ")
-	query += " WHERE id = $%d"
+	query += fmt.Sprintf( " WHERE id = $%d", len(args)+1)
 	args = append(args, req.Id)
 	_, err := r.db.Exec(query, args...)
 	return err
@@ -99,7 +98,7 @@ func (r *LessonRepo) UpdateLesson(req *pb.LessonUpdate) error {
 
 func (r *LessonRepo) DeleteLesson(byId *pb.ById) error {
 	query := `update lessons set deleted_at = $1 WHERE id = $2 and deleted_at = 0`
-	_, err := r.db.Exec(query,time.Now().Unix(), byId.Id)
+	_, err := r.db.Exec(query, time.Now().Unix(), byId.Id)
 	return err
 }
 
@@ -112,44 +111,45 @@ func (r *LessonRepo) ListLessons(req *pb.LessonFilter) (*pb.LessonList, error) {
 					created_at 
 	          FROM lessons 
 			  WHERE deleted_at = 0`
-	var cons []string 
+	var cons []string
 	var args []interface{}
-	if req.CourseId!= "" && req.CourseId!= "string"{
-        cons = append(cons, fmt.Sprintf("course_id = $%d",len(args)+1))
-        args = append(args, req.CourseId)
-    }		  
+	if req.CourseId != "" && req.CourseId != "string" {
+		cons = append(cons, fmt.Sprintf("course_id = $%d", len(args)+1))
+		args = append(args, req.CourseId)
+	}
 	if len(cons) > 0 {
-        query += " AND " + strings.Join(cons, " AND ")
-    }
+		query += " AND " + strings.Join(cons, " AND ")
+	}
 	query += " ORDER BY created_at DESC"
-	if req.Filter.Limit!= 0 {
-        query += fmt.Sprintf(" LIMIT $%d", len(args)+1)
-        args = append(args, req.Filter.Limit)
-    }
-	if req.Filter.Offset!= 0 {
-        query += fmt.Sprintf(" OFFSET $%d", len(args)+1)
-        args = append(args, req.Filter.Offset)
-    }
+	if req.Filter.Limit != 0 {
+		query += fmt.Sprintf(" LIMIT $%d", len(args)+1)
+		args = append(args, req.Filter.Limit)
+	}
+	if req.Filter.Offset != 0 {
+		query += fmt.Sprintf(" OFFSET $%d", len(args)+1)
+		args = append(args, req.Filter.Offset)
+	}
 	rows, err := r.db.Query(query, args...)
-	if err!= nil {
-        return nil, err
-    }
+	if err != nil {
+		return nil, err
+	}
 	defer rows.Close()
 	var lessons pb.LessonList
 	for rows.Next() {
 		var lesson pb.LessonGet
-        err := rows.Scan(
-            &lesson.Id,
-            &lesson.CurseId,
-            &lesson.Name,
-            &lesson.Description,
-            &lesson.VideoUrl,
-            &lesson.CreatedAt,
-        )
-        if err!= nil {
-            return nil, err
-        }
-        lessons.Lessons = append(lessons.Lessons, &lesson)
+		err := rows.Scan(
+			&lesson.Id,
+			&lesson.CurseId,
+			&lesson.Name,
+			&lesson.Description,
+			&lesson.VideoUrl,
+			&lesson.CreatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		lessons.Lessons = append(lessons.Lessons, &lesson)
 	}
 	return &lessons, nil
 }
+ 

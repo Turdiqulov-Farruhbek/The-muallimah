@@ -2,7 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -19,16 +18,16 @@ const (
 	bookCollectionName = "books"
 )
 
-type bookRepo struct {
+type BookRepo struct {
 	col *mongo.Collection
 }
 
 func NewBookManager(db *mongo.Database) repository.Books {
-	return &bookRepo{
+	return &BookRepo{
 		col: db.Collection(bookCollectionName),
 	}
 }
-func (r *bookRepo) CreateBook(ctx context.Context, book *entity.BookCreate) error {
+func (r *BookRepo) CreateBook(ctx context.Context, book *entity.BookCreate) error {
 	now := time.Now().Format(time.RFC3339)
 
 	books := bson.M{
@@ -50,7 +49,7 @@ func (r *bookRepo) CreateBook(ctx context.Context, book *entity.BookCreate) erro
 
 }
 
-func (r *bookRepo) UpdateBook(ctx context.Context, book *entity.BookUpdate) error {
+func (r *BookRepo) UpdateBook(ctx context.Context, book *entity.BookUpdate) error {
 	obj_id, err := primitive.ObjectIDFromHex(book.Id)
 	if err != nil {
 		return err
@@ -82,7 +81,7 @@ func (r *bookRepo) UpdateBook(ctx context.Context, book *entity.BookUpdate) erro
 
 }
 
-func (r *bookRepo) DeleteBook(ctx context.Context, bookID string) error {
+func (r *BookRepo) DeleteBook(ctx context.Context, bookID string) error {
 	deletedAt := time.Now().Unix()
 	obj_id, err := primitive.ObjectIDFromHex(bookID)
 	if err != nil {
@@ -102,7 +101,7 @@ func (r *bookRepo) DeleteBook(ctx context.Context, bookID string) error {
 
 }
 
-func (r *bookRepo) ListBooks(ctx context.Context, book *entity.BookFilter) (*entity.BookList, error) {
+func (r *BookRepo) ListBooks(ctx context.Context, book *entity.BookFilter) (*entity.BookList, error) {
 	if r.col == nil {
 		return nil, fmt.Errorf("col is not initialized")
 	}
@@ -173,7 +172,7 @@ func (r *bookRepo) ListBooks(ctx context.Context, book *entity.BookFilter) (*ent
 	}, nil
 }
 
-func (r *bookRepo) GetBook(ctx context.Context, bookID string) (*entity.BookGet, error) {
+func (r *BookRepo) GetBook(ctx context.Context, bookID string) (*entity.BookGet, error) {
 	var books entity.BookGet
 	obj_id, err := primitive.ObjectIDFromHex(bookID)
 	if err != nil {
@@ -211,7 +210,7 @@ func (r *bookRepo) GetBook(ctx context.Context, bookID string) (*entity.BookGet,
 
 }
 
-func (r *bookRepo) AddPicture(ctx context.Context, picture *entity.BookPicture) error {
+func (r *BookRepo) AddPicture(ctx context.Context, picture *entity.BookPicture) error {
 
 	pictures := bson.M{
 		"BookID":      picture.BookId,
@@ -225,44 +224,34 @@ func (r *bookRepo) AddPicture(ctx context.Context, picture *entity.BookPicture) 
 
 	return nil
 }
-func (r *bookRepo) DeletePicture(ctx context.Context, bookpic *entity.BookPicture) error {
-	// Validate the BookId to ensure it's a valid MongoDB ObjectID
-	if !primitive.IsValidObjectID(bookpic.BookId) {
-		log.Printf("Invalid ObjectID format for BookId: %s", bookpic.BookId)
-		return errors.New("invalid ObjectID format")
-	}
-
-	// Convert BookId string to MongoDB ObjectID
+func (r *BookRepo) DeletePicture(ctx context.Context, bookpic *entity.BookPicture) error {
 	objID, err := primitive.ObjectIDFromHex(bookpic.BookId)
 	if err != nil {
 		return err
 	}
 
-	// Define the filter for the document to be updated
 	filter := bson.M{
-		"_id":          objID,
-		"picture_urls": bookpic.PictureUrl,
-		"DeletedAt":    0,
+		"_id":       objID,
+		"DeletedAt": 0,
 	}
 
-	// Update the document to set the DeletedAt timestamp
-	res, err := r.col.UpdateOne(ctx, filter, bson.M{"$set": bson.M{"DeletedAt": time.Now().Unix()}})
+	update := bson.M{
+		"$pull": bson.M{"PictureUrls": bookpic.PictureUrl},
+	}
+
+	res, err := r.col.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return err
 	}
 
-	// Check if any document was matched and updated
 	if res.MatchedCount == 0 {
 		return mongo.ErrNoDocuments
 	}
 
-	// Log the successful deletion
 	log.Println("Picture deleted for book ID:", bookpic.BookId)
 
 	return nil
 }
-
-
 
 type BOoks struct {
 	Title       string   `bson:"Title"`

@@ -8,7 +8,6 @@ import (
 
 	"github.com/google/uuid"
 	pb "gitlab.com/muallimah/course_service/internal/pkg/genproto"
-
 )
 
 type UserCourseRepo struct {
@@ -28,15 +27,15 @@ func (r *UserCourseRepo) EnrollUserInCourse(req *pb.UserCourseCreateReq) error {
 								end_date, 
 								status)
 	          VALUES ($1, $2, $3, $4, $5, $6)`
-	y,m,d := time.Now().Date()
-	startDate := fmt.Sprintf("%d-%02d-%02d", y, m, d)		  
-	_, err := r.db.Exec(query, 
-		uuid.NewString(), 
-		req.UserId, 
-		req.CourseId, 
-		startDate, 
-		startDate, 
-		"started",
+	y, m, d := time.Now().Date()
+	startDate := fmt.Sprintf("%d-%02d-%02d", y, m, d)
+	_, err := r.db.Exec(query,
+		uuid.NewString(),
+		req.UserId,
+		req.CourseId,
+		startDate,
+		startDate,
+		"in_progress",
 	)
 	return err
 }
@@ -76,17 +75,21 @@ func (r *UserCourseRepo) GetUserCourse(byId *pb.ById) (*pb.UserCourse, error) {
 	INNER JOIN 
 		categories ct on ct.id = c.category_id	
 	WHERE 
-		uc.id = $1 AND uc.deleted_at = 0`
+		uc.id = $1`
 
 	row := r.db.QueryRow(query, byId.Id)
 
+	var (
+		end_date sql.NullString
+	)
 	var userCourse pb.UserCourse
 	var user pb.UserGetRes
 	var course pb.Course
+	course.Category = &pb.Category{}
 	err := row.Scan(
-		&userCourse.Id, 
-		&userCourse.StartDate, 
-		&userCourse.EndDate, 
+		&userCourse.Id,
+		&userCourse.StartDate,
+		&end_date,
 		&userCourse.Status,
 		&user.Id,
 		&user.FirstName,
@@ -114,6 +117,9 @@ func (r *UserCourseRepo) GetUserCourse(byId *pb.ById) (*pb.UserCourse, error) {
 		}
 		return nil, err
 	}
+	if end_date.Valid {
+		userCourse.EndDate = end_date.String
+	}
 	userCourse.User = &user
 	userCourse.Course = &course
 
@@ -124,37 +130,37 @@ func (r *UserCourseRepo) UpdateUserCourse(req *pb.UserCourseUpdateReq) error {
 	query := `UPDATE user_courses SET `
 	var cons []string
 	var args []interface{}
-	if req.Body.StartDate!= "" && req.Body.EndDate!= "string" {
-        cons = append(cons, fmt.Sprintf("start_date = $%d", len(args)+1))
-        args = append(args, req.Body.StartDate)
-    }
-	if req.Body.EndDate!= "" && req.Body.EndDate!= "string" {
-        cons = append(cons, fmt.Sprintf("end_date = $%d", len(args)+1))
-        args = append(args, req.Body.EndDate)
-    }
+	if req.Body.StartDate != "" && req.Body.EndDate != "string" {
+		cons = append(cons, fmt.Sprintf("start_date = $%d", len(args)+1))
+		args = append(args, req.Body.StartDate)
+	}
+	if req.Body.EndDate != "" && req.Body.EndDate != "string" {
+		cons = append(cons, fmt.Sprintf("end_date = $%d", len(args)+1))
+		args = append(args, req.Body.EndDate)
+	}
 	if req.Body.Status != "" && req.Body.Status != "string" {
 		cons = append(cons, fmt.Sprintf("status = $%d", len(args)+1))
-        args = append(args, req.Body.Status)
+		args = append(args, req.Body.Status)
 		if req.Body.Status == "completed" {
-			y,m,d := time.Now().Date()
+			y, m, d := time.Now().Date()
 			endDate := fmt.Sprintf("%d-%02d-%02d", y, m, d)
 			cons = append(cons, fmt.Sprintf("end_date = $%d", len(args)+1))
 			args = append(args, endDate)
 		}
 	}
 	if len(cons) == 0 {
-        return fmt.Errorf("at least one field should be updated")
-    }
+		return fmt.Errorf("at least one field should be updated")
+	}
 	query += strings.Join(cons, ", ")
-	query += " WHERE id = $%d"
+	query += fmt.Sprintf(" WHERE id = $%d", len(args)+1)
 	args = append(args, req.Id)
 	_, err := r.db.Exec(query, args...)
 	return err
 
 }
 func (r *UserCourseRepo) DeleteUserCourse(byId *pb.ById) error {
-	query := `update user_courses set deleted_at = $1 WHERE id = $2 and deleted_at = 0`
-	_, err := r.db.Exec(query,time.Now().Unix(), byId.Id)
+	query := `DELETE FROM user_courses WHERE id = $1`
+	_, err := r.db.Exec(query, byId.Id)
 	return err
 }
 
@@ -205,8 +211,8 @@ func (r *UserCourseRepo) ListUserCourses(req *pb.UserCourseListsReq) (*pb.UserCo
 	if len(conditions) > 0 {
 		query += " WHERE " + strings.Join(conditions, " AND ")
 	}
-	
-	query += " AND uc.deleted_at = 0 ORDER BY uc.created_at DESC"
+
+	query += " ORDER BY uc.start_date DESC"
 
 	if req.Filter.Limit != 0 {
 		query += fmt.Sprintf(" LIMIT $%d", len(args)+1)
@@ -225,11 +231,17 @@ func (r *UserCourseRepo) ListUserCourses(req *pb.UserCourseListsReq) (*pb.UserCo
 
 	var userCourses []*pb.UserCourse
 	for rows.Next() {
+		var (
+			end_date sql.NullString
+		)
 		var userCourse pb.UserCourse
+		userCourse.User = &pb.UserGetRes{}
+		userCourse.Course = &pb.Course{}
+		userCourse.Course.Category = &pb.Category{}
 		err := rows.Scan(
-			&userCourse.Id, 
-			&userCourse.StartDate, 
-			&userCourse.EndDate, 
+			&userCourse.Id,
+			&userCourse.StartDate,
+			&end_date,
 			&userCourse.Status,
 			&userCourse.User.Id,
 			&userCourse.User.FirstName,
@@ -253,6 +265,9 @@ func (r *UserCourseRepo) ListUserCourses(req *pb.UserCourseListsReq) (*pb.UserCo
 		)
 		if err != nil {
 			return nil, err
+		}
+		if end_date.Valid {
+			userCourse.EndDate = end_date.String
 		}
 		userCourses = append(userCourses, &userCourse)
 	}

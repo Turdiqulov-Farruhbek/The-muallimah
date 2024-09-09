@@ -36,7 +36,7 @@ func Run(cf config.Config) {
 	go service.Server(&cf, *logger, pgsql)
 	em.CheckErr(err)
 
-	AuthConn, err := grpc.NewClient(fmt.Sprintf("localhost%s", cf.AUTH_GRPC_PORT), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	AuthConn, err := grpc.NewClient(fmt.Sprintf("auth_service%s", cf.AUTH_GRPC_PORT), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	em.CheckErr(err)
 	defer AuthConn.Close()
 

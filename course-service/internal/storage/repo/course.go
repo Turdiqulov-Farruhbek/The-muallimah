@@ -58,6 +58,7 @@ func (r *CourseRepo) GetCourse(byId *pb.ById) (*pb.Course, error) {
 	row := r.db.QueryRow(query, byId.Id)
 
 	var course pb.Course
+	course.Category = &pb.Category{}
 	err := row.Scan(
 		&course.Id,
 		&course.Name,
@@ -109,7 +110,7 @@ func (r *CourseRepo) UpdateCourse(req *pb.CourseUpdateReq) error {
 
 func (r *CourseRepo) DeleteCourse(byId *pb.ById) error {
 	query := `update courses set deleted_at = $1 WHERE id = $2 and deleted_at = 0`
-	_, err := r.db.Exec(query,time.Now().Unix(), byId.Id)
+	_, err := r.db.Exec(query, time.Now().Unix(), byId.Id)
 	return err
 }
 
@@ -124,26 +125,26 @@ func (r *CourseRepo) ListCourses(req *pb.CourseListsReq) (*pb.CourseListsRes, er
 					c.created_at, 
 					c.updated_at 
 	          FROM courses c
-			  LEFT JOIN categories ct ON ct.id = c.category_id
+			  INNER JOIN categories ct ON ct.id = c.category_id
 			  WHERE c.deleted_at = 0`
 	var cons []string
 	var args []interface{}
-	if req.CategoryId!= "" && req.CategoryId != "string"{
-        cons = append(cons, fmt.Sprintf("c.category_id = $%d",len(args)+1))
-        args = append(args, req.CategoryId)
-    }		  
+	if req.CategoryId != "" && req.CategoryId != "string" {
+		cons = append(cons, fmt.Sprintf("c.category_id = $%d", len(args)+1))
+		args = append(args, req.CategoryId)
+	}
 	if len(cons) > 0 {
-        query += " AND " + strings.Join(cons, " AND ")
-    }
+		query += " AND " + strings.Join(cons, " AND ")
+	}
 	query += " ORDER BY c.created_at DESC"
 	if req.Filter.Limit != 0 {
 		query += fmt.Sprintf(" LIMIT $%d", len(args)+1)
-        args = append(args, req.Filter.Limit)
+		args = append(args, req.Filter.Limit)
 	}
-	if req.Filter.Offset!= 0 {
-        query += fmt.Sprintf(" OFFSET $%d", len(args)+1)
-        args = append(args, req.Filter.Offset)
-    }
+	if req.Filter.Offset != 0 {
+		query += fmt.Sprintf(" OFFSET $%d", len(args)+1)
+		args = append(args, req.Filter.Offset)
+	}
 
 	rows, err := r.db.Query(query, args...)
 	if err != nil {
@@ -154,15 +155,16 @@ func (r *CourseRepo) ListCourses(req *pb.CourseListsReq) (*pb.CourseListsRes, er
 	var courses []*pb.Course
 	for rows.Next() {
 		var course pb.Course
+		course.Category = &pb.Category{}
 		err := rows.Scan(
-			&course.Id, 
-			&course.Name, 
+			&course.Id,
+			&course.Name,
 			&course.Description,
-			&course.Price, 
-			&course.ImageUrl, 
+			&course.Price,
+			&course.ImageUrl,
 			&course.Category.Id,
 			&course.Category.Name,
-			&course.CreatedAt, 
+			&course.CreatedAt,
 			&course.UpdatedAt,
 		)
 		if err != nil {

@@ -6,30 +6,27 @@ import (
 	"log/slog"
 
 	"gitlab.com/acumen5524834/shop-service/internal/entity"
-	"gitlab.com/acumen5524834/shop-service/internal/infrastructure/grpc_service_clients"
 	"gitlab.com/acumen5524834/shop-service/internal/pkg/genproto"
-	"gitlab.com/acumen5524834/shop-service/internal/usecase"
+	"gitlab.com/acumen5524834/shop-service/internal/usecase/service"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-type bookRPC struct {
+type BookRPC struct {
 	genproto.UnimplementedBookServiceServer
 	logger      *zap.Logger
 	bookUseCase usecase.Books
-	client      grpc_service_clients.ServiceClients
 }
 
-func NewRPC(logger *zap.Logger, bookUseCase usecase.Books, client *grpc_service_clients.ServiceClients) genproto.BookServiceServer {
-	return &bookRPC{
+func NewRPC(logger *zap.Logger, bookUseCase usecase.Books) genproto.BookServiceServer {
+	return &BookRPC{
 		logger:      logger,
 		bookUseCase: bookUseCase,
-		client:      *client,
 	}
 }
 
-func (s bookRPC) CreateBook(ctx context.Context, in *genproto.BookCreate) (*genproto.Void, error) {
+func (s BookRPC) CreateBook(ctx context.Context, in *genproto.BookCreate) (*genproto.Void, error) {
 	book := s.bookUseCase.CreateBook(ctx, &entity.BookCreate{
 		Title:       in.Title,
 		Description: in.Description,
@@ -42,7 +39,7 @@ func (s bookRPC) CreateBook(ctx context.Context, in *genproto.BookCreate) (*genp
 	return nil, ctx.Err()
 }
 
-func (s bookRPC) UpdateBook(ctx context.Context, in *genproto.BookUpdate) (*genproto.Void, error) {
+func (s BookRPC) UpdateBook(ctx context.Context, in *genproto.BookUpdate) (*genproto.Void, error) {
 	book := s.bookUseCase.UpdateBook(ctx, &entity.BookUpdate{
 		Id: in.Id,
 		Body: entity.BookUpt{Title: in.Body.Title,
@@ -53,7 +50,7 @@ func (s bookRPC) UpdateBook(ctx context.Context, in *genproto.BookUpdate) (*genp
 	return nil, ctx.Err()
 }
 
-func (s bookRPC) DeleteBook(ctx context.Context, in *genproto.ById) (*genproto.Void, error) {
+func (s BookRPC) DeleteBook(ctx context.Context, in *genproto.ById) (*genproto.Void, error) {
 	if err := s.bookUseCase.DeleteBook(ctx, in.Id); err != nil {
 		s.logger.Error(err.Error())
 		return nil, err
@@ -61,7 +58,7 @@ func (s bookRPC) DeleteBook(ctx context.Context, in *genproto.ById) (*genproto.V
 	slog.Info("Book deleted")
 	return nil, ctx.Err()
 }
-func (s bookRPC) DeletePicture(ctx context.Context, in *genproto.BookPicture) (*genproto.Void, error) {
+func (s BookRPC) DeletePicture(ctx context.Context, in *genproto.BookPicture) (*genproto.Void, error) {
 
 	err := s.bookUseCase.DeletePicture(ctx, &entity.BookPicture{
 		BookId:     in.BookId,
@@ -80,7 +77,7 @@ func (s bookRPC) DeletePicture(ctx context.Context, in *genproto.BookPicture) (*
 }
 
 
-func (s bookRPC) GetBook(ctx context.Context, in *genproto.ById) (*genproto.BookGet, error) {
+func (s BookRPC) GetBook(ctx context.Context, in *genproto.ById) (*genproto.BookGet, error) {
 	book, err := s.bookUseCase.GetBook(ctx, in.Id)
 
 	if err != nil {
@@ -98,7 +95,7 @@ func (s bookRPC) GetBook(ctx context.Context, in *genproto.ById) (*genproto.Book
 	}, nil
 }
 
-func (s bookRPC) AddPicture(ctx context.Context, in *genproto.BookPicture) (*genproto.Void, error) {
+func (s BookRPC) AddPicture(ctx context.Context, in *genproto.BookPicture) (*genproto.Void, error) {
 	book := s.bookUseCase.AddPicture(ctx, &entity.BookPicture{
 		BookId:     in.BookId,
 		PictureUrl: in.PictureUrl,
@@ -108,7 +105,7 @@ func (s bookRPC) AddPicture(ctx context.Context, in *genproto.BookPicture) (*gen
 
 	return nil, ctx.Err()
 }
-func (s bookRPC) ListBooks(ctx context.Context, in *genproto.BookFilter) (*genproto.BookList, error) {
+func (s BookRPC) ListBooks(ctx context.Context, in *genproto.BookFilter) (*genproto.BookList, error) {
 	if in == nil {
 		return nil, fmt.Errorf("request is nil")
 	}

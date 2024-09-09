@@ -5,28 +5,25 @@ import (
 	"log/slog"
 
 	"gitlab.com/acumen5524834/shop-service/internal/entity"
-	"gitlab.com/acumen5524834/shop-service/internal/infrastructure/grpc_service_clients"
 	"gitlab.com/acumen5524834/shop-service/internal/pkg/genproto"
-	"gitlab.com/acumen5524834/shop-service/internal/usecase"
+	"gitlab.com/acumen5524834/shop-service/internal/usecase/service"
 	"go.uber.org/zap"
 )
 
-type postRPC struct {
+type PostRPC struct {
 	genproto.UnimplementedPostServiceServer
 	logger      *zap.Logger
 	postUseCase usecase.Posts
-	client      grpc_service_clients.ServiceClients
 }
 
-func NewPostRPC(logger *zap.Logger, postUseCase usecase.Posts, client *grpc_service_clients.ServiceClients) genproto.PostServiceServer {
-	return &postRPC{
+func NewPostRPC(logger *zap.Logger, postUseCase usecase.Posts) genproto.PostServiceServer {
+	return &PostRPC{
 		logger:      logger,
 		postUseCase: postUseCase,
-		client:      *client,
 	}
 }
 
-func (s postRPC) CreatePost(ctx context.Context, in *genproto.PostCreate) (*genproto.Void, error) {
+func (s PostRPC) CreatePost(ctx context.Context, in *genproto.PostCreate) (*genproto.Void, error) {
 	post := s.postUseCase.CreatePost(ctx, &entity.PostCreate{
 		Title:       in.Title,
 		Content:     in.Content,
@@ -38,7 +35,7 @@ func (s postRPC) CreatePost(ctx context.Context, in *genproto.PostCreate) (*genp
 	return nil, ctx.Err()
 }
 
-func (s postRPC) UpdatePost(ctx context.Context, in *genproto.PostUpdate) (*genproto.Void, error) {
+func (s PostRPC) UpdatePost(ctx context.Context, in *genproto.PostUpdate) (*genproto.Void, error) {
 	post := s.postUseCase.UpdatePost(ctx, &entity.PostUpdate{
 		ID: in.Id,
 		Body: entity.PostUpt{
@@ -49,7 +46,7 @@ func (s postRPC) UpdatePost(ctx context.Context, in *genproto.PostUpdate) (*genp
 	return nil, ctx.Err()
 }
 
-func (s postRPC) DeletePost(ctx context.Context, in *genproto.ById) (*genproto.Void, error) {
+func (s PostRPC) DeletePost(ctx context.Context, in *genproto.ById) (*genproto.Void, error) {
 	if err := s.postUseCase.DeletePost(ctx, in.Id); err != nil {
 		s.logger.Error(err.Error())
 		return nil, err
@@ -58,7 +55,7 @@ func (s postRPC) DeletePost(ctx context.Context, in *genproto.ById) (*genproto.V
 	return nil, ctx.Err()
 }
 
-func (s postRPC) DeletePostPicture(ctx context.Context, in *genproto.PostPicture) (*genproto.Void, error) {
+func (s PostRPC) DeletePostPicture(ctx context.Context, in *genproto.PostPicture) (*genproto.Void, error) {
 	s.logger.Info("DeletePostPicture called", zap.String("PostId", in.PostId), zap.String("PictureUrl", in.PictureUrl))
 
 	err := s.postUseCase.DeletePostPicture(ctx, &entity.PostPicture{
@@ -75,7 +72,7 @@ func (s postRPC) DeletePostPicture(ctx context.Context, in *genproto.PostPicture
 	return &genproto.Void{}, nil
 }
 
-func (s postRPC) GetPost(ctx context.Context, in *genproto.ById) (*genproto.PostGet, error) {
+func (s PostRPC) GetPost(ctx context.Context, in *genproto.ById) (*genproto.PostGet, error) {
 	post, err := s.postUseCase.GetPost(ctx, in.Id)
 
 	if err != nil {
@@ -92,7 +89,7 @@ func (s postRPC) GetPost(ctx context.Context, in *genproto.ById) (*genproto.Post
 	}, nil
 }
 
-func (s postRPC) AddPostPicture(ctx context.Context, in *genproto.PostPicture) (*genproto.Void, error) {
+func (s PostRPC) AddPostPicture(ctx context.Context, in *genproto.PostPicture) (*genproto.Void, error) {
 	post := s.postUseCase.AddPostPicture(ctx, &entity.PostPicture{
 		PostID:     in.PostId,
 		PictureUrl: in.PictureUrl,
@@ -102,7 +99,7 @@ func (s postRPC) AddPostPicture(ctx context.Context, in *genproto.PostPicture) (
 
 	return nil, ctx.Err()
 }
-func (s postRPC) GetPosts(ctx context.Context,in *genproto.Pagination) (*genproto.PostList,error) {
+func (s PostRPC) GetPosts(ctx context.Context,in *genproto.Pagination) (*genproto.PostList,error) {
 
 	posts, err := s.postUseCase.GetPosts(context.Background(), &entity.Pagination{
 		Limit:  int32(in.Limit),

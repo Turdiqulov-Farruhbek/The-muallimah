@@ -6,28 +6,25 @@ import (
 	"log/slog"
 
 	"gitlab.com/acumen5524834/shop-service/internal/entity"
-	"gitlab.com/acumen5524834/shop-service/internal/infrastructure/grpc_service_clients"
 	"gitlab.com/acumen5524834/shop-service/internal/pkg/genproto"
-	"gitlab.com/acumen5524834/shop-service/internal/usecase"
+	"gitlab.com/acumen5524834/shop-service/internal/usecase/service"
 	"go.uber.org/zap"
 )
 
-type productRPC struct {
+type ProductRPC struct {
 	genproto.UnimplementedProductServiceServer
 	logger         *zap.Logger
 	productUseCase usecase.Products
-	client         grpc_service_clients.ServiceClients
 }
 
-func NewProductRPC(logger *zap.Logger, productUseCase usecase.Products, client *grpc_service_clients.ServiceClients) genproto.ProductServiceServer {
-	return &productRPC{
+func NewProductRPC(logger *zap.Logger, productUseCase usecase.Products) genproto.ProductServiceServer {
+	return &ProductRPC{
 		logger:         logger,
 		productUseCase: productUseCase,
-		client:         *client,
 	}
 }
 
-func (s productRPC) CreateProduct(ctx context.Context, in *genproto.ProductCreate) (*genproto.Void, error) {
+func (s ProductRPC) CreateProduct(ctx context.Context, in *genproto.ProductCreate) (*genproto.Void, error) {
 	product := s.productUseCase.CreateProduct(ctx, &entity.ProductCreate{
 		Title:       in.Title,
 		Description: in.Description,
@@ -40,7 +37,7 @@ func (s productRPC) CreateProduct(ctx context.Context, in *genproto.ProductCreat
 	return nil, ctx.Err()
 }
 
-func (s productRPC) UpdateProduct(ctx context.Context, in *genproto.ProductUpdate) (*genproto.Void, error) {
+func (s ProductRPC) UpdateProduct(ctx context.Context, in *genproto.ProductUpdate) (*genproto.Void, error) {
 	product := s.productUseCase.UpdateProduct(ctx, &entity.ProductUpdate{
 		Id: in.Id,
 		Body: entity.ProductUpt{
@@ -52,7 +49,7 @@ func (s productRPC) UpdateProduct(ctx context.Context, in *genproto.ProductUpdat
 	return nil, ctx.Err()
 }
 
-func (s productRPC) DeleteProduct(ctx context.Context, in *genproto.ById) (*genproto.Void, error) {
+func (s ProductRPC) DeleteProduct(ctx context.Context, in *genproto.ById) (*genproto.Void, error) {
 	if err := s.productUseCase.DeleteProduct(ctx, in.Id); err != nil {
 		s.logger.Error(err.Error())
 		return nil, err
@@ -61,7 +58,7 @@ func (s productRPC) DeleteProduct(ctx context.Context, in *genproto.ById) (*genp
 	return nil, ctx.Err()
 }
 
-func (s productRPC) DeletePicture(ctx context.Context, in *genproto.ProductPicture) (*genproto.Void, error) {
+func (s ProductRPC) DeletePicture(ctx context.Context, in *genproto.ProductPicture) (*genproto.Void, error) {
 	if err := s.productUseCase.DeletePicture(ctx, &entity.ProductPicture{ProductId: in.ProductId, PictureUrl: in.PictureUrl}); err != nil {
 		s.logger.Error("Failed to delete product picture", zap.String("productId", in.ProductId), zap.String("pictureUrl", in.PictureUrl), zap.Error(err))
 		return nil, err
@@ -71,7 +68,7 @@ func (s productRPC) DeletePicture(ctx context.Context, in *genproto.ProductPictu
 	return nil, ctx.Err()
 }
 
-func (s productRPC) GetProduct(ctx context.Context, in *genproto.ById) (*genproto.ProductGet, error) {
+func (s ProductRPC) GetProduct(ctx context.Context, in *genproto.ById) (*genproto.ProductGet, error) {
 	product, err := s.productUseCase.GetProduct(ctx, in.Id)
 
 	if err != nil {
@@ -89,7 +86,7 @@ func (s productRPC) GetProduct(ctx context.Context, in *genproto.ById) (*genprot
 	}, nil
 }
 
-func (s productRPC) AddPicture(ctx context.Context, in *genproto.ProductPicture) (*genproto.Void, error) {
+func (s ProductRPC) AddPicture(ctx context.Context, in *genproto.ProductPicture) (*genproto.Void, error) {
 	product := s.productUseCase.AddPicture(ctx, &entity.ProductPicture{
 		ProductId:  in.ProductId,
 		PictureUrl: in.PictureUrl,
@@ -99,7 +96,7 @@ func (s productRPC) AddPicture(ctx context.Context, in *genproto.ProductPicture)
 
 	return nil, ctx.Err()
 }
-func (s productRPC) ListProducts(ctx context.Context, in *genproto.ProductFilter) (*genproto.ProductList, error) {
+func (s ProductRPC) ListProducts(ctx context.Context, in *genproto.ProductFilter) (*genproto.ProductList, error) {
 	if in == nil {
 		return nil, fmt.Errorf("request is nil")
 	}

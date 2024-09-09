@@ -25,10 +25,12 @@ func NewRouter(h *handlers.HTTPHandler, logger *l.Logger) *gin.Engine {
 	router.POST("/login", h.Login)
 	router.POST("/forgot-password", h.ForgotPassword)
 	router.POST("/recover-password", h.RecoverPassword)
-	router.POST("/set-pfp", h.SetPFP)
-	router.POST("/send-code", h.SendCodeAgain)
+	router.POST("/resverify", h.SendCodeAgain)
 
 	protected := router.Group("/", middleware.JWTMiddleware())
+	protected.POST("/set-pfp", h.SetPFP)
+	protected.PUT("/user", h.UpdateProfile)
+	protected.PUT("/user-password", h.UpdatePassword)
 	protected.GET("/profile", h.Profile)
 
 	router.GET("/user/:id", h.GetByID)

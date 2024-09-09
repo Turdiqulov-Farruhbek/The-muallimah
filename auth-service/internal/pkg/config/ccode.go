@@ -8,10 +8,11 @@ import (
 	"math/big"
 	"time"
 
+	l "github.com/azizbek-qodirov/logger"
 	"gopkg.in/gomail.v2"
 )
 
-func SendConfirmationCode(email string) error {
+func SendConfirmationCode(email string, logger *l.Logger) error {
 	rdb, err := rdb.NewRedisClient(context.Background())
 	if err != nil {
 		return err
@@ -32,11 +33,13 @@ func SendConfirmationCode(email string) error {
 	d := gomail.NewDialer("smtp.gmail.com", 587, Load().SENDER_EMAIL, Load().APP_PASSWORD)
 
 	if err := d.DialAndSend(m); err != nil {
+		logger.ERROR.Println("Error sending confirmation code: ", err.Error())
 		return err
 	}
 
 	err = rdb.Set(context.Background(), email, code, 3*time.Minute).Err()
 	if err != nil {
+		logger.ERROR.Println("Error storing confirmation code in Redis: ", err.Error())
 		return fmt.Errorf("server error storing confirmation code in Redis")
 	}
 	return nil

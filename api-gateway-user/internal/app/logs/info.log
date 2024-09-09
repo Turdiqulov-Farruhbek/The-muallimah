@@ -1,0 +1,32 @@
+[ERROR]  2024/09/04 15:53:36 user.go:42: Failed to create user: rpc error: code = Unavailable desc = dns: A record lookup error: lookup auth_service on 127.0.0.53:53: server misbehaving
+[ERROR]  2024/09/04 15:55:07 order.go:34: Failed to create order: rpc error: code = Unavailable desc = dns: A record lookup error: lookup q on 127.0.0.53:53: server misbehaving
+[ERROR]  2024/09/04 15:56:41 order.go:34: Failed to create order: rpc error: code = Unavailable desc = dns: A record lookup error: lookup q on 127.0.0.53:53: server misbehaving
+[ERROR]  2024/09/04 15:59:41 order.go:34: Failed to create order: rpc error: code = Unavailable desc = dns: A record lookup error: lookup q on 127.0.0.53:53: server misbehaving
+[ERROR]  2024/09/04 16:00:24 order.go:34: Failed to create order: rpc error: code = Unknown desc = pq: invalid input syntax for type uuid: "66cef94759df1ab2e243f742"
+[ERROR]  2024/09/04 16:01:33 order.go:34: Failed to create order: rpc error: code = Unknown desc = pq: invalid input syntax for type numeric: "string"
+[ERROR]  2024/09/04 16:01:45 order.go:34: Failed to create order: rpc error: code = Unknown desc = pq: insert or update on table "orders" violates foreign key constraint "orders_user_id_fkey"
+[ERROR]  2024/09/04 16:12:56 order.go:71: Failed to update order: rpc error: code = Unknown desc = pq: column "updated_at" of relation "orders" does not exist
+[ERROR]  2024/09/04 16:13:47 order.go:142: Failed to list orders: rpc error: code = Unknown desc = pq: syntax error at or near "WHERE"
+[ERROR]  2024/09/04 16:14:07 order.go:142: Failed to list orders: rpc error: code = Unknown desc = pq: column "course_id" does not exist
+[ERROR]  2024/09/04 16:15:16 order.go:99: Failed to get order: rpc error: code = Unknown desc = pq: invalid input syntax for type uuid: "66cc67c85958ee939c66071f"
+[ERROR]  2024/09/04 16:15:28 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
+[ERROR]  2024/09/04 16:18:25 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
+[ERROR]  2024/09/04 16:21:33 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
+[ERROR]  2024/09/04 16:24:20 order.go:99: Failed to get order: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50051: connect: connection refused"
+[ERROR]  2024/09/04 16:25:43 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
+[ERROR]  2024/09/04 16:25:43 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
+[ERROR]  2024/09/04 16:26:09 order.go:99: Failed to get order: rpc error: code = Unknown desc = sql: no rows in result set
+[ERROR]  2024/09/04 16:26:18 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
+[ERROR]  2024/09/04 16:32:21 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
+[ERROR]  2024/09/04 16:34:15 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
+[ERROR]  2024/09/04 16:35:46 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
+[ERROR]  2024/09/04 16:37:12 order.go:99: Failed to get order: rpc error: code = Unknown desc = MongoDB client is not connected: the Command operation must have a Deployment set before Execute can be called
+[ERROR]  2024/09/04 16:38:32 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: mongo: no documents in result
+[ERROR]  2024/09/04 16:40:37 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: mongo: no documents in result
+[ERROR]  2024/09/04 16:41:17 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: mongo: no documents in result
+[ERROR]  2024/09/04 16:43:17 order.go:99: Failed to get order: rpc error: code = Unknown desc = no book found with ID 66cc67c85958ee939c66071f
+[ERROR]  2024/09/04 16:44:00 order.go:99: Failed to get order: rpc error: code = Unknown desc = no book found with ID 66d845edefad9044d4ddda5e
+[ERROR]  2024/09/04 16:46:54 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to update order in PostgreSQL: pq: numeric field overflow
+[ERROR]  2024/09/04 16:47:36 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to update order in PostgreSQL: pq: numeric field overflow
+[ERROR]  2024/09/04 16:48:23 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to update order in PostgreSQL: pq: numeric field overflow
+[ERROR]  2024/09/04 17:11:25 order.go:142: Failed to list orders: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50051: connect: connection refused"
