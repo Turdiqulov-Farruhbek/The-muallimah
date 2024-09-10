@@ -7,7 +7,9 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o notification_delivery ./cmd
 
 FROM alpine:latest
+
 WORKDIR /app
+
 COPY --from=builder /app/notification_delivery .
 
 COPY .env .
