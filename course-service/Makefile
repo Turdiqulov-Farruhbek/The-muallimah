@@ -13,10 +13,8 @@ migrate_up:
 migrate_down:
 	migrate -path muallimah-submodule/migrations -database postgres://mrbek:QodirovCoder@localhost:5432/muallimah_db?sslmode=disable -verbose down
 
-
 migrate_force:
 	migrate -path muallimah-submodule/migrations -database postgres://mrbek:QodirovCoder@localhost:5432/muallimah_db?sslmode=disable -verbose force 1
-
 
 migrate_file:
 	migrate create -ext sql -dir muallimah-submodule/migrations -seq insert_table
