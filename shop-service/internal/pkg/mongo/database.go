@@ -15,12 +15,12 @@ type MongoDB struct {
 }
 
 func NewMongoDB() (*MongoDB, error) {
-	uri := "mongodb://localhost:27017"
+	uri := "mongodb://root:root@mongodb:27017"
 	clientOptions := options.Client().ApplyURI(uri)
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
-		slog.Error("Failed to connect to MongoDB:", err)
+		slog.Error("Failed to connect to MongoDB:" + err.Error())
 		return nil, err
 	}
 
@@ -29,7 +29,7 @@ func NewMongoDB() (*MongoDB, error) {
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		slog.Error("Failed to ping MongoDB:", err)
+		slog.Error("Failed to ping MongoDB:" + err.Error())
 		return nil, err
 	}
 

@@ -14,11 +14,12 @@ type Postgres struct {
 
 func New(cfg *config.Config) (*Postgres, error) {
 	dbConn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
-		cfg.DB.User,
-		cfg.DB.Password,
-		cfg.DB.Host,
-		cfg.DB.Port,
-		cfg.DB.Database)
+		cfg.PostgresUser,
+		cfg.PostgresPassword,
+		cfg.PostgresHost,
+		cfg.PostgresPort,
+		cfg.PostgresDatabase)
+
 	db, err := sql.Open("postgres", dbConn)
 	if err != nil {
 		return nil, err

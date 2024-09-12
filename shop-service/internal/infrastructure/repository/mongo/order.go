@@ -141,7 +141,7 @@ func (o *OrderRepository) reconnectMongoClient(c context.Context) error {
 		return fmt.Errorf("failed to disconnect from MongoDB: %v", err)
 	}
 
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOptions := options.Client().ApplyURI("mongodb://mongodb:27017")
 	newClient, err := mongo.Connect(c, clientOptions)
 	if err != nil {
 		return fmt.Errorf("failed to reconnect to MongoDB: %v", err)

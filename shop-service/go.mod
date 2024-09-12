@@ -4,7 +4,6 @@ go 1.22.5
 
 require (
 	github.com/google/uuid v1.6.0
-	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/segmentio/kafka-go v0.4.47
 	github.com/spf13/cast v1.7.0

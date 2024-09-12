@@ -20,36 +20,36 @@ type Config struct {
 		User     string
 		Password string
 	}
-	DB struct {
-		Host     string
-		Port     int
-		User     string
-		Password string
-		Database string
-	}
+	PostgresHost     string
+	PostgresPort     int
+	PostgresUser     string
+	PostgresPassword string
+	PostgresDatabase string
 }
 
 func New() *Config {
 	var config Config
 
-	// general configuration
+	// General configuration
 	config.Context.Timeout = getEnv("CONTEXT_TIMEOUT", "30s")
 
-	// Mongo configuration
+	// MongoDB configuration
 	config.RPCPort = getEnv("RPC_PORT", ":50051")
-	config.Mongo.Host = getEnv("MONGOHOST", "localhost")
-	config.Mongo.Port = getEnv("MONGOPORT", "5432")
-	config.Mongo.User = getEnv("MONGOUSER", "mubina")
-	config.Mongo.Password = getEnv("MONGOPASSWORD", "1234")
+	config.Mongo.Host = getEnv("MONGOHOST", "mongodb")
+	config.Mongo.Port = getEnv("MONGOPORT", "27017")
+	config.Mongo.User = getEnv("MONGOUSER", "root")
+	config.Mongo.Password = getEnv("MONGOPASSWORD", "root")
 
-	//db configuration
-	config.DB.Host = getEnv("DBHOST", "localhost")
-	config.DB.Port = cast.ToInt(getEnv("DBPORT", "5432"))
-	config.DB.User = getEnv("DBUSER", "postgres")
-	config.DB.Password = getEnv("DBPASSWORD", "1234")
-	config.DB.Database = getEnv("DBDATABASE", "orders")
+	// PostgreSQL configuration
+	config.PostgresHost = cast.ToString(getEnv("POSTGRES_HOST", "muallimah_db"))
+	config.PostgresPort = cast.ToInt(getEnv("POSTGRES_PORT", "5432"))
+	config.PostgresUser = cast.ToString(getEnv("POSTGRES_USER", "postgres"))
+	config.PostgresPassword = cast.ToString(getEnv("POSTGRES_PASSWORD", "00salom00"))
+	config.PostgresDatabase = cast.ToString(getEnv("POSTGRES_DATABASE", "muallimah_db"))
 
+	// Kafka configuration
 	config.KafkaUrl = getEnv("KAFKAURL", ":9095")
+
 	return &config
 }
 

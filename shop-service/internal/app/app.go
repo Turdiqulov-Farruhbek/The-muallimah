@@ -15,9 +15,6 @@ import (
 	usecase "gitlab.com/acumen5524834/shop-service/internal/usecase/service"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpcrecovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
-	grpcctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
@@ -50,18 +47,7 @@ func NewApp(cfg *config.Config) (*App, error) {
 	}
 
 	// Initialize gRPC server with middleware
-	grpcServer := grpc.NewServer(
-		grpc.StreamInterceptor(grpcmiddleware.ChainStreamServer(
-			grpcctxtags.StreamServerInterceptor(),
-			grpcrecovery.StreamServerInterceptor(),
-		)),
-		grpc.UnaryInterceptor(server.UnaryInterceptor(
-			grpcmiddleware.ChainUnaryServer(
-				grpcctxtags.UnaryServerInterceptor(),
-				grpcrecovery.UnaryServerInterceptor(),
-			),
-		)),
-	)
+	grpcServer := grpc.NewServer()
 
 	return &App{
 		Config:     cfg,
@@ -105,7 +91,7 @@ func (a *App) Run() error {
 	genproto.RegisterBookServiceServer(a.GrpcServer, services.NewRPC(a.Logger, bookUseCase))
 	genproto.RegisterPostServiceServer(a.GrpcServer, services.NewPostRPC(a.Logger, postUseCase))
 	genproto.RegisterProductServiceServer(a.GrpcServer, services.NewProductRPC(a.Logger, productUseCase))
-	genproto.RegisterOrderServiceServer(a.GrpcServer, services.NewOrderService(mdb.NewOrderRepository(a.Postg,&mongo.Client{})))
+	genproto.RegisterOrderServiceServer(a.GrpcServer, services.NewOrderServiceClient(mdb.NewOrderRepository(a.Postg, &mongo.Client{})))
 
 	// Start gRPC server
 	a.Logger.Info("gRPC Server Listening", zap.String("url", a.Config.RPCPort))

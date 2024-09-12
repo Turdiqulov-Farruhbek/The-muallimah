@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  mongo:
+    container_name: mongodb
+    image: mongo:latest
+    networks:
+      - muallimah
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  shop:
+    container_name: shop
+    build: .
+    depends_on:
+      # postgres-db:
+      #   condition: service_healthy
+      mongo:
+        condition: service_started
+    ports:
+      - "50051:50051"
+    networks:
+      - muallimah
+
+networks:
+  muallimah:
+    external: true
+    name: muallimah
+    driver: bridge
+
+volumes:
+  mongo-data:
+  db:
