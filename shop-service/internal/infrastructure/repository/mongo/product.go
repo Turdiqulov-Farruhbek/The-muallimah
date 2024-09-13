@@ -108,14 +108,6 @@ func (r *productRepo) ListProducts(ctx context.Context, products *entity.Product
 	if products == nil {
 		return nil, fmt.Errorf("request is nil")
 	}
-
-	if products.Pagination.Limit <= 0 {
-		return nil, fmt.Errorf("pagination limit must be greater than 0")
-	}
-	if products.Pagination.Offset < 0 {
-		return nil, fmt.Errorf("pagination offset cannot be negative")
-	}
-
 	filter := bson.M{"DeletedAt": 0}
 	if products.Title != "" {
 		filter["Title"] = products.Title
@@ -168,6 +160,10 @@ func (r *productRepo) ListProducts(ctx context.Context, products *entity.Product
 	return &entity.ProductList{
 		Products:   productss,
 		TotalCount: int64(totalCount),
+		Pagination: entity.Pagination{
+			Limit:   products.Pagination.Limit,
+			Offset:  products.Pagination.Offset,
+		},
 	}, nil
 }
 

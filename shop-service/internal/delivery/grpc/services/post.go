@@ -99,16 +99,15 @@ func (s PostRPC) AddPostPicture(ctx context.Context, in *genproto.PostPicture) (
 
 	return nil, ctx.Err()
 }
-func (s PostRPC) GetPosts(ctx context.Context,in *genproto.Pagination) (*genproto.PostList,error) {
-
-	posts, err := s.postUseCase.GetPosts(context.Background(), &entity.Pagination{
+func (s PostRPC) GetPosts(ctx context.Context, in *genproto.Pagination) (*genproto.PostList, error) {
+	posts, err := s.postUseCase.GetPosts(ctx, &entity.Pagination{
 		Limit:  int32(in.Limit),
 		Offset: int32(in.Offset),
 	})
 
 	if err != nil {
 		s.logger.Error("Error getting posts", zap.Error(err))
-		return nil,err
+		return nil, err
 	}
 
 	postList := &genproto.PostList{
@@ -126,5 +125,6 @@ func (s PostRPC) GetPosts(ctx context.Context,in *genproto.Pagination) (*genprot
 	}
 	postList.TotalCount = posts.TotalCount
 
-	return nil,err
+	return postList, nil
 }
+

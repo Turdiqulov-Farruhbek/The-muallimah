@@ -110,13 +110,6 @@ func (r *BookRepo) ListBooks(ctx context.Context, book *entity.BookFilter) (*ent
 		return nil, fmt.Errorf("request is nil")
 	}
 
-	if book.Pagination.Limit <= 0 {
-		return nil, fmt.Errorf("pagination limit must be greater than 0")
-	}
-	if book.Pagination.Offset < 0 {
-		return nil, fmt.Errorf("pagination offset cannot be negative")
-	}
-
 	filter := bson.M{"DeletedAt": 0}
 	if book.Title != "" {
 		filter["Title"] = book.Title
@@ -169,6 +162,11 @@ func (r *BookRepo) ListBooks(ctx context.Context, book *entity.BookFilter) (*ent
 	return &entity.BookList{
 		Books:      books,
 		TotalCount: int64(totalCount),
+		Pagination: entity.Pagination{
+			Limit:   book.Pagination.Limit,
+			Offset: book.Pagination.Offset,
+		},
+		
 	}, nil
 }
 

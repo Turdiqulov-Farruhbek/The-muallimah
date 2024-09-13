@@ -41,5 +41,6 @@ type BookFilter struct {
 
 type BookList struct {
 	Books      []*BookGet
-	TotalCount int64    
+	TotalCount int64  
+	Pagination Pagination  
 }

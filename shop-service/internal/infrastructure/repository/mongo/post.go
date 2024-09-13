@@ -105,12 +105,7 @@ func (r *postRepo) GetPosts(ctx context.Context, post *entity.Pagination) (*enti
 	if post == nil {
 		return nil, fmt.Errorf("request is nil")
 	}
-	if post.Limit <= 0 {
-		return nil, fmt.Errorf( "limit must be greater than 0")
-	}
-	if post.Offset < 0 {
-		return nil, fmt.Errorf(" offset cannot be negative")
-	}
+
 
 	filter := bson.M{"DeletedAt": 0}
 
@@ -127,8 +122,10 @@ func (r *postRepo) GetPosts(ctx context.Context, post *entity.Pagination) (*enti
 	}
 	options.SetProjection(projection)
 
+
 	cursor, err := r.col.Find(ctx, filter, options)
 	if err != nil {
+		log.Println("Error finding posts:", err)
 		return nil, err
 	}
 	defer cursor.Close(ctx)
@@ -137,25 +134,35 @@ func (r *postRepo) GetPosts(ctx context.Context, post *entity.Pagination) (*enti
 	for cursor.Next(ctx) {
 		var post entity.PostGet
 		if err := cursor.Decode(&post); err != nil {
+			log.Println("Error decoding post:", err)
 			return nil, err
 		}
 		posts = append(posts, &post)
 	}
 
 	if err := cursor.Err(); err != nil {
+		log.Println("Cursor error after processing:", err)
 		return nil, err
 	}
 
 	totalCount, err := r.col.CountDocuments(ctx, filter)
 	if err != nil {
+		log.Println("Error counting documents:", err)
 		return nil, err
 	}
+
+	log.Println("Total count of posts:", totalCount)
 
 	return &entity.PostList{
 		Posts:      posts,
 		TotalCount: int32(totalCount),
+		Pagination: entity.Pagination{
+			Limit:   post.Limit,
+			Offset:  post.Offset},
 	}, nil
 }
+
+
 func (r *postRepo) GetPost(ctx context.Context, postID string) (*entity.PostGet, error) {
 	var posts entity.PostGet
 	obj_id, err := primitive.ObjectIDFromHex(postID)
@@ -207,7 +214,7 @@ func (r *postRepo) AddPostPicture(ctx context.Context, postpic *entity.PostPictu
 	return nil
 }
 func (r *postRepo) DeletePostPicture(ctx context.Context, postpic *entity.PostPicture) error {
-    objID, err := primitive.ObjectIDFromHex(postpic.PostID)
+	objID, err := primitive.ObjectIDFromHex(postpic.PostID)
 	if err != nil {
 		return err
 	}
@@ -234,9 +241,6 @@ func (r *postRepo) DeletePostPicture(ctx context.Context, postpic *entity.PostPi
 
 	return nil
 }
-
-
-
 
 type Posts struct {
 	Title       string   `bson:"Title"`
