@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+option go_package = "/internal/pkg/genproto";
+
+package protos;
+
+import "muallimah-submodule/protos/common.proto";
+import "muallimah-submodule/protos/user.proto";
+import "muallimah-submodule/protos/users_course.proto";
+
+
+
+
+
+service TransactionService {
+    rpc CreateTransaction(TransactionCreateReq) returns (Void);
+    rpc GetTransaction(ById) returns (TransactionGetRes);
+    rpc ListTransactions(TransactionListReq) returns (TransactionListRes);
+    rpc GetBalance(ById) returns (BalanceGetRes);
+
+}
+
+message TransactionCreateReq {
+    string user_course_id = 1;
+    float amount = 2;
+    string type = 3;
+    string user_id = 4;
+}
+
+message TransactionGetRes {
+    string id = 1;
+    UserCourse user_course = 2;
+    float amount = 3;
+    string type = 4;
+    UserGetRes user = 5;
+}
+
+message TransactionListReq {
+    string user_course_id = 1;
+    float amount_from = 2;
+    float amount_to = 3;
+    string type = 4;
+    string user_id = 5;
+    string course_id = 6;
+    Pagination Filter = 7;
+}
+
+message TransactionListRes {
+    repeated TransactionGetRes transactions = 1;
+}
+
+message BalanceGetRes {
+    float balance = 1;
+    bool get_usage = 2;
+    Stats usage = 3;
+
+    message Stats {
+        float shop_spendings = 2;
+        float course_spendings = 3;
+        float payments = 4;   
+    }
+}
