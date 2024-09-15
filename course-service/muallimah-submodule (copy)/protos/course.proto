@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+option go_package = "/internal/pkg/genproto";
+
+import "muallimah-submodule/protos/common.proto";
+import "muallimah-submodule/protos/category.proto";
+
+package protos;
+
+
+service CourseService {
+    rpc CreateCourse(CourseCreateReq) returns (Void);
+    rpc GetCourse(ById) returns (Course);
+    rpc UpdateCourse(CourseUpdateReq) returns (Void);
+    rpc DeleteCourse(ById) returns (Void);
+    rpc ListCourses(CourseListsReq) returns (CourseListsRes);
+}
+
+message Course {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    float  price = 4;
+    string image_url = 5;
+    Category category = 6;
+    string created_at = 7;
+    string updated_at = 8;
+}
+
+message CourseCreateReq {
+    string name = 1;
+    string description = 2;
+    float price = 3;
+    string image_url = 4;
+    string category_id = 5;
+}
+
+
+// message CourseGetRes {
+//     Course course = 1;
+// }
+
+message CourseListsReq {
+    string category_id = 1;
+    Pagination filter = 2; 
+}
+
+message CourseListsRes {
+    repeated Course courses = 1;
+    Pagination pagination = 2;
+    int32 total_count = 3;
+}
+
+message CourseUpt {
+    string name = 1;
+    string description = 2;
+    float  price = 3;
+    string image_url = 4;
+}
+
+message CourseUpdateReq {
+    string Id = 1;
+    CourseUpt Body = 2;
+}
+
+
+
+
