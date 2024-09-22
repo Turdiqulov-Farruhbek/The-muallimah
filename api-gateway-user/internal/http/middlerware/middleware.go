@@ -1,6 +1,7 @@
 package middlerware
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -25,6 +26,7 @@ func NewAuth(enforce *casbin.Enforcer) gin.HandlerFunc {
 		}
 
 		allow, err := CheckPermission(ctx.FullPath(), ctx.Request, enforce)
+		fmt.Println(ctx.FullPath(),"full path ")
 
 		if err != nil {
 			valid, _ := err.(jwt.ValidationError)

@@ -15,7 +15,6 @@ service BookService {
     rpc AddPicture(BookPicture) returns (Void);
     rpc DeletePicture(BookPicture) returns (Void);
 }
-
 message BookCreate {
     string Title = 1;
     string Description = 2;

@@ -18,7 +18,7 @@ import (
 // @Success        200  {string}  string "User enrolled in course successfully"
 // @Failure        400  {string}  string "Invalid request"
 // @Failure        500  {string}  string "Internal server error"
-// @Router         /user-courses/enroll [post]
+// @Router         /usercourses/create [post]
 func (h *Handler) EnrollUserInCourse(c *gin.Context) {
 	var req pb.UserCourseCreateReq
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -49,7 +49,7 @@ func (h *Handler) EnrollUserInCourse(c *gin.Context) {
 // @Failure        400  {string}  string "Invalid request"
 // @Failure        404  {string}  string "User course not found"
 // @Failure        500  {string}  string "Internal server error"
-// @Router         /user-courses/{id} [get]
+// @Router         /usercourses/{id} [get]
 func (h *Handler) GetUserCourse(c *gin.Context) {
 	courseID := c.Param("id")
 
@@ -77,7 +77,7 @@ func (h *Handler) GetUserCourse(c *gin.Context) {
 // @Success        200  {string}  string "User course updated successfully"
 // @Failure        400  {string}  string "Invalid request"
 // @Failure        500  {string}  string "Internal server error"
-// @Router         /user-courses/{id} [put]
+// @Router         /usercourses/update/{id} [put]
 func (h *Handler) UpdateUserCourse(c *gin.Context) {
 	// Extract course ID from URL parameters
 	courseID := c.Param("id")
@@ -121,7 +121,7 @@ func (h *Handler) UpdateUserCourse(c *gin.Context) {
 // @Success        200  {string}  string "User course deleted successfully"
 // @Failure        400  {string}  string "Invalid request"
 // @Failure        500  {string}  string "Internal server error"
-// @Router         /user-courses/{id} [delete]
+// @Router         /usercourses/delete/{id} [delete]
 func (h *Handler) DeleteUserCourse(c *gin.Context) {
 	courseID := c.Param("id")
 
@@ -144,13 +144,13 @@ func (h *Handler) DeleteUserCourse(c *gin.Context) {
 // @Accept         json
 // @Produce        json
 // @Security       BearerAuth
-// @Param          user_id query   string  true  "User ID"
-// @Param          limit query string true "Limit"
-// @Param          offset query string true "Offset"
+// @Param          user_id query   string  false  "User ID"
+// @Param          limit query string false "Limit"
+// @Param          offset query string false "Offset"
 // @Success        200  {object}  pb.UserCourseListsRes "List of user courses"
 // @Failure        400  {string}  string "Invalid request"
 // @Failure        500  {string}  string "Internal server error"“
-// @Router         /user-courses [get]
+// @Router         /usercourses/list [get]
 func (h *Handler) ListUserCourses(c *gin.Context) {
 	var req pb.UserCourseListsReq
 	req.Filter = &pb.Pagination{}

@@ -11,7 +11,6 @@ import (
 	"muallimah-gateway/internal/pkg/config"
 	"muallimah-gateway/internal/pkg/kafka"
 	"muallimah-gateway/internal/pkg/logger"
-
 	// "github.com/go-redis/redis"
 )
 
@@ -38,7 +37,6 @@ func Run(cfg config.Config) {
 		return
 	}
 	defer kafka.Close()
-
 
 	// make handler
 	h := handlers.NewHandler(*clients, kafka, logger)

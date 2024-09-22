@@ -36,7 +36,7 @@ type PostServiceClient interface {
 	GetPost(ctx context.Context, in *ById, opts ...grpc.CallOption) (*PostGet, error)
 	UpdatePost(ctx context.Context, in *PostUpdate, opts ...grpc.CallOption) (*Void, error)
 	DeletePost(ctx context.Context, in *ById, opts ...grpc.CallOption) (*Void, error)
-	GetPosts(ctx context.Context, in *Pagination, opts ...grpc.CallOption) (PostService_GetPostsClient, error)
+	GetPosts(ctx context.Context, in *Pagination, opts ...grpc.CallOption) (*PostList, error)
 	AddPostPicture(ctx context.Context, in *PostPicture, opts ...grpc.CallOption) (*Void, error)
 	DeletePostPicture(ctx context.Context, in *PostPicture, opts ...grpc.CallOption) (*Void, error)
 }
@@ -89,37 +89,14 @@ func (c *postServiceClient) DeletePost(ctx context.Context, in *ById, opts ...gr
 	return out, nil
 }
 
-func (c *postServiceClient) GetPosts(ctx context.Context, in *Pagination, opts ...grpc.CallOption) (PostService_GetPostsClient, error) {
+func (c *postServiceClient) GetPosts(ctx context.Context, in *Pagination, opts ...grpc.CallOption) (*PostList, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &PostService_ServiceDesc.Streams[0], PostService_GetPosts_FullMethodName, cOpts...)
+	out := new(PostList)
+	err := c.cc.Invoke(ctx, PostService_GetPosts_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &postServiceGetPostsClient{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-type PostService_GetPostsClient interface {
-	Recv() (*PostList, error)
-	grpc.ClientStream
-}
-
-type postServiceGetPostsClient struct {
-	grpc.ClientStream
-}
-
-func (x *postServiceGetPostsClient) Recv() (*PostList, error) {
-	m := new(PostList)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+	return out, nil
 }
 
 func (c *postServiceClient) AddPostPicture(ctx context.Context, in *PostPicture, opts ...grpc.CallOption) (*Void, error) {
@@ -150,7 +127,7 @@ type PostServiceServer interface {
 	GetPost(context.Context, *ById) (*PostGet, error)
 	UpdatePost(context.Context, *PostUpdate) (*Void, error)
 	DeletePost(context.Context, *ById) (*Void, error)
-	GetPosts(*Pagination, PostService_GetPostsServer) error
+	GetPosts(context.Context, *Pagination) (*PostList, error)
 	AddPostPicture(context.Context, *PostPicture) (*Void, error)
 	DeletePostPicture(context.Context, *PostPicture) (*Void, error)
 	mustEmbedUnimplementedPostServiceServer()
@@ -172,8 +149,8 @@ func (UnimplementedPostServiceServer) UpdatePost(context.Context, *PostUpdate) (
 func (UnimplementedPostServiceServer) DeletePost(context.Context, *ById) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePost not implemented")
 }
-func (UnimplementedPostServiceServer) GetPosts(*Pagination, PostService_GetPostsServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetPosts not implemented")
+func (UnimplementedPostServiceServer) GetPosts(context.Context, *Pagination) (*PostList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPosts not implemented")
 }
 func (UnimplementedPostServiceServer) AddPostPicture(context.Context, *PostPicture) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddPostPicture not implemented")
@@ -266,25 +243,22 @@ func _PostService_DeletePost_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PostService_GetPosts_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(Pagination)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+func _PostService_GetPosts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Pagination)
+	if err := dec(in); err != nil {
+		return nil, err
 	}
-	return srv.(PostServiceServer).GetPosts(m, &postServiceGetPostsServer{ServerStream: stream})
-}
-
-type PostService_GetPostsServer interface {
-	Send(*PostList) error
-	grpc.ServerStream
-}
-
-type postServiceGetPostsServer struct {
-	grpc.ServerStream
-}
-
-func (x *postServiceGetPostsServer) Send(m *PostList) error {
-	return x.ServerStream.SendMsg(m)
+	if interceptor == nil {
+		return srv.(PostServiceServer).GetPosts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PostService_GetPosts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PostServiceServer).GetPosts(ctx, req.(*Pagination))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _PostService_AddPostPicture_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -347,6 +321,10 @@ var PostService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _PostService_DeletePost_Handler,
 		},
 		{
+			MethodName: "GetPosts",
+			Handler:    _PostService_GetPosts_Handler,
+		},
+		{
 			MethodName: "AddPostPicture",
 			Handler:    _PostService_AddPostPicture_Handler,
 		},
@@ -355,12 +333,6 @@ var PostService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _PostService_DeletePostPicture_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "GetPosts",
-			Handler:       _PostService_GetPosts_Handler,
-			ServerStreams: true,
-		},
-	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "muallimah-submodule/protos/post.proto",
 }

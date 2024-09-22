@@ -51,7 +51,7 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 // @Success 		200  {string}  string "Order updated successfully"
 // @Failure 		400  {string}  string "Invalid request"
 // @Failure 		500  {string}  string "Internal server error"
-// @Router 			/orders/update/{id} [put]
+// @Router 			/orders/{id} [put]
 func (h *Handler) UpdateOrder(c *gin.Context) {
 	orderID := c.Param("id")
 
@@ -119,6 +119,7 @@ func (h *Handler) GetOrder(c *gin.Context) {
 // @Failure 500 {string} string "Internal server error"
 // @Router /orders/list [get]
 func (h *Handler) ListOrders(c *gin.Context) {
+	// Initialize the request and set default values
 	var req pb.OrderListsReq
 	req.Filter = &pb.Pagination{}
 
@@ -135,6 +136,7 @@ func (h *Handler) ListOrders(c *gin.Context) {
 		}
 	}
 
+	// Retrieve orders from gRPC service
 	res, err := h.Clients.Order.ListOrders(context.Background(), &req)
 	if err != nil {
 		h.Logger.ERROR.Println("Failed to list orders:", err)
@@ -157,7 +159,7 @@ func (h *Handler) ListOrders(c *gin.Context) {
 // @Failure 		400  {string}  string "Invalid request"
 // @Failure 		404  {string}  string "Order not found"
 // @Failure 		500  {string}  string "Internal server error"
-// @Router 			/orders/delete/{id} [delete]
+// @Router 			/orders/{id} [delete]
 func (h *Handler) DeleteOrder(c *gin.Context) {
 	orderID := c.Param("id")
 

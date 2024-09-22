@@ -111,7 +111,7 @@ func (h *Handler) GetMaterial(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param lesson_id query string false "Lesson ID"
+// @Param lesson_id query string true "Lesson ID"
 // @Param limit query int false "Limit"
 // @Param offset query int false "Offset"
 // @Success 200 {object} pb.MaterialListRes "List of materials"

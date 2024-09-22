@@ -20,7 +20,7 @@ type Clients struct {
 	Post         pb.PostServiceClient
 	Product      pb.ProductServiceClient
 	Transaction  pb.TransactionServiceClient
-	User  pb.UserServiceClient
+	User         pb.UserServiceClient
 	UserLesson   pb.UserLessonServiceClient
 	UserCourse   pb.UserCourseServiceClient
 	Notification pb.NotificationServiceClient
@@ -50,7 +50,6 @@ func NewClients(cfg *config.Config) (*Clients, error) {
 	bookClient := pb.NewBookServiceClient(shop_conn)
 	productClient := pb.NewProductServiceClient(shop_conn)
 	postClient := pb.NewPostServiceClient(shop_conn)
-	orderClient := pb.NewOrderServiceClient(shop_conn)
 
 	courseClient := pb.NewCourseServiceClient(course_conn)
 	materialClient := pb.NewMaterialServiceClient(course_conn)
@@ -59,6 +58,7 @@ func NewClients(cfg *config.Config) (*Clients, error) {
 	userCourseClient := pb.NewUserCourseServiceClient(course_conn)
 	evaluationClient := pb.NewEvaluationServiceClient(course_conn)
 	lessonClient := pb.NewLessonServiceClient(course_conn)
+	orderClient := pb.NewOrderServiceClient(course_conn)
 	transactionClient := pb.NewTransactionServiceClient(course_conn)
 	userLessonClient := pb.NewUserLessonServiceClient(course_conn)
 
@@ -76,7 +76,7 @@ func NewClients(cfg *config.Config) (*Clients, error) {
 		Post:         postClient,
 		Product:      productClient,
 		Transaction:  transactionClient,
-		User:  userClient,
+		User:         userClient,
 		UserLesson:   userLessonClient,
 		UserCourse:   userCourseClient,
 		Notification: notificationClient,

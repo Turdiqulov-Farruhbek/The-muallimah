@@ -5,7 +5,6 @@ import (
 	"gitlab.com/muallimah/course_service/internal/pkg/config"
 )
 
-
 func main() {
 	config := config.Load()
 

@@ -19,7 +19,7 @@ import (
 // @Success       200  {string}  string "User Lesson created successfully"
 // @Failure       400  {string}  string "Invalid request"
 // @Failure       500  {string}  string "Internal server error"
-// @Router        /user-lessons/create [post]
+// @Router        /userlessons/create [post]
 func (h *Handler) CreateUserLesson(c *gin.Context) {
 	var req pb.UserLessonCreateReq
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -50,7 +50,7 @@ func (h *Handler) CreateUserLesson(c *gin.Context) {
 // @Failure       400  {string}  string "Invalid request"
 // @Failure       404  {string}  string "User Lesson not found"
 // @Failure       500  {string}  string "Internal server error"
-// @Router        /user-lessons/{id} [get]
+// @Router        /userlessons/{id} [get]
 func (h *Handler) GetUserLesson(c *gin.Context) {
 	userLessonID := c.Param("id")
 
@@ -74,14 +74,15 @@ func (h *Handler) GetUserLesson(c *gin.Context) {
 // @Produce       json
 // @Security      BearerAuth
 // @Param         id path string true "User Lesson ID"
-// @Param         user_lesson body pb.UserLessonUpdateReq true "User Lesson update data"
+// @Param         user_lesson body pb.UserUptbody true "User Lesson update data"
 // @Success       200  {string}  string "User Lesson updated successfully"
 // @Failure       400  {string}  string "Invalid request"
 // @Failure       500  {string}  string "Internal server error"
-// @Router        /user-lessons/update/{id} [put]
+// @Router        /userlessons/update/{id} [put]
 func (h *Handler) UpdateUserLesson(c *gin.Context) {
 	var req pb.UserLessonUpdateReq
-	if err := c.ShouldBindJSON(&req); err != nil {
+	req.Body = &pb.UserUptbody{}
+	if err := c.ShouldBindJSON(&req.Body); err != nil {
 		h.Logger.ERROR.Println("Failed to bind request:", err)
 		c.JSON(400, "Invalid request: "+err.Error())
 		return
@@ -110,7 +111,7 @@ func (h *Handler) UpdateUserLesson(c *gin.Context) {
 // @Success       200  {string}  string "User Lesson deleted successfully"
 // @Failure       400  {string}  string "Invalid request"
 // @Failure       500  {string}  string "Internal server error"
-// @Router        /user-lessons/delete/{id} [delete]
+// @Router        /userlessons/delete/{id} [delete]
 func (h *Handler) DeleteUserLesson(c *gin.Context) {
 	userLessonID := c.Param("id")
 
@@ -139,7 +140,7 @@ func (h *Handler) DeleteUserLesson(c *gin.Context) {
 // @Success       200  {object}  pb.UserLessonListsRes "List of user lessons"
 // @Failure       400  {string}  string "Invalid request"
 // @Failure       500  {string}  string "Internal server error"
-// @Router        /user-lessons/list [get]
+// @Router        /userlessons/list [get]
 func (h *Handler) ListUserLessons(c *gin.Context) {
 	var req pb.UserLessonListsReq
 	req.Filter = &pb.Pagination{}

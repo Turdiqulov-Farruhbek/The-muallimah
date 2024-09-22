@@ -1,84 +1,126 @@
-p, admin, /account/create, POST
-p, admin, /account/:id, GET
-p, admin, /account/update/:id, PUT
-p, admin, /account/delete/:id, DELETE
-p, admin, /account/list, GET
+p, admin, /materials/create, POST
+p, admin, /materials/:id, GET
+p, user, /materials/:id, GET
+p, admin, /materials/:id, PUT
+p, admin, /materials/:id, DELETE
+p, admin, /materials/list, GET
+p, user, /materials/list, GET
 
-p, admin, /budgets/create, POST
-p, admin, /budgets/:id, GET
-p, admin, /budgets/:id, PUT
-p, admin, /budgets/delete/:id, DELETE
-p, admin, /budgets/list, GET
+p, admin, /books/create, POST
+p, admin, /books/:id, GET
+p, user, /books/:id, GET
+p, admin, /books/update/:id, PUT
+p, admin, /books/delete/:id, DELETE
+p, admin, /books/list, GET
+p, user, /books/list, GET
 
 p, admin, /categories/create, POST
 p, admin, /categories/:id, GET
+p, user, /categories/:id, GET
 p, admin, /categories/:id, PUT
 p, admin, /categories/:id, DELETE
 p, admin, /categories/list, GET
-
-p, admin, /goals/create, POST
-p, admin, /goals/:goal_id, GET
-p, admin, /goals/:goal_id, PUT
-p, admin, /goals/:goal_id, DELETE
-p, admin, /goals/list, GET
-
-p, admin, /notifications/create, POST
-p, admin, /notifications/:notification_id, GET
-p, admin, /notifications/:notification_id, PUT
-p, admin, /notifications/:notification_id, DELETE
-p, admin, /notifications/list, GET
-p, admin, /notifications/notify-all, POST
-
-p, admin, /report/spendings, GET
-p, admin, /report/incomes, GET
-p, admin, /report/budget-performance, GET
-p, admin, /report/goal-progress, GET
-
-p, admin, /transactions/create, POST
-p, admin, /transactions/:id, GET
-p, admin, /transactions/:transaction_id, PUT
-p, admin, /transactions/:id, DELETE
-p, admin, /transactions/list, GET
-
-p, user, /account/create, POST
-p, user, /account/:id, GET
-p, user, /account/update/:id, PUT
-p, user, /account/delete/:id, DELETE
-p, user, /account/list, GET
-
-p, user, /budgets/create, POST
-p, user, /budgets/:id, GET
-p, user, /budgets/:id, PUT
-p, user, /budgets/delete/:id, DELETE
-p, user, /budgets/list, GET
-
-p, user, /categories/create, POST
-p, user, /categories/:id, GET
-p, user, /categories/:id, PUT
-p, user, /categories/:id, DELETE
 p, user, /categories/list, GET
 
-p, user, /goals/create, POST
-p, user, /goals/:goal_id, GET
-p, user, /goals/:goal_id, PUT
-p, user, /goals/:goal_id, DELETE
-p, user, /goals/list, GET
+p, admin, /certificates/create, POST
+p, user, /certificates/create, POST
+p, admin, /certificates/:id, GET
+p, user, /certificates/:id, GET
+p, admin, /certificates/:id, PUT
+p, admin, /certificates/:id, DELETE
+p, admin, /certificates/list, GET
+p, user, /certificates/list, GET
 
-p, user, /notifications/create, POST
-p, user, /notifications/:notification_id, GET
-p, user, /notifications/:notification_id, PUT
-p, user, /notifications/:notification_id, DELETE
-p, user, /notifications/list, GET
-p, user, /notifications/notify-all, POST
 
-p, user, /report/spendings, GET
-p, user, /report/incomes, GET
-p, user, /report/budget-performance, GET
-p, user, /report/goal-progress, GET
+p, admin, /course/create, POST
+p, admin, /course/:id, GET
+p, user, /course/:id, GET
+p, admin, /course/update/:id, PUT
+p, admin, /course/delete/:id, DELETE
+p, admin, /course/list, GET
+p, user, /course/list, GET
 
+
+p, admin, /evalution/create, POST
+p, user, /evalution/create, POST
+p, admin, /evalution/:id, GET
+p, user, /evalution/:id, GET
+p, admin, /evalution/delete/:id, DELETE
+p, admin, /evalution/list, GET
+p, user, /evalution/list, GET
+
+
+p, admin, /lessons/create, POST
+p, admin, /lessons/:id, GET
+p, user, /lessons/:id, GET
+p, admin, /lessons/:id, PUT
+p, admin, /lessons/:id, DELETE
+p, admin, /lessons/list, GET
+p, user, /lessons/list, GET
+
+
+p, admin, /notification/create, POST
+p, admin, /notification/:id, GET
+p, user, /notification/:id, GET
+p, admin, /notification/update/:id, PUT
+p, admin, /notification/delete/:id, DELETE
+p, admin, /notification/list, GET
+p, user, /notification/list, GET
+p, admin, /notification/notify-all, POST
+
+p, admin, /orders/create, POST
+p, user, /orders/create, POST
+p, admin, /orders/:id, GET
+p, user, /orders/:id, GET
+p, admin, /orders/update/:id, PUT
+p, admin, /orders/delete/:id, DELETE
+p, admin, /orders/list, GET
+p, user, /orders/list, GET
+
+p, admin, /posts/create, POST
+p, admin, /posts/:id, GET
+p, user, /posts/:id, GET
+p, admin, /posts/update/:id, PUT
+p, admin, /posts/delete/:id, DELETE
+p, admin, /posts/list, GET
+p, user, /posts/list, GET
+p, admin, /posts/pictures/add, POST
+p, admin, /posts/pictures/delete, POST
+
+p, admin, /products/create, POST
+p, admin, /products/:id, GET
+p, user, /products/:id, GET
+p, admin, /products/update/:id, PUT
+p, admin, /products/delete/:id, DELETE
+p, admin, /products/list, GET
+p, user, /products/list, GET
+p, admin, /products/pictures/add, POST
+p, admin, /products/pictures/delete, POST
+
+p, admin, /transactions/create, POST
 p, user, /transactions/create, POST
+p, admin, /transactions/:id, GET
 p, user, /transactions/:id, GET
-p, user, /transactions/:transaction_id, PUT
-p, user, /transactions/:id, DELETE
+p, admin, /transactions/Get balance/:id, GET
+p, user, /transactions/Get balance/:id, GET
+p, admin, /transactions/list, GET
 p, user, /transactions/list, GET
+
+p, admin, /userlessons/create, POST
+p, user, /userlessons/create, POST
+p, admin, /userlessons/:id, GET
+p, user, /userlessons/:id, GET
+p, admin, /userlessons/update/:id, PUT
+p, admin, /userlessons/delete/:id, DELETE
+p, admin, /userlessons/list, GET
+p, user, /userlessons/list, GET
+
+p, admin, /usercourses/create, POST
+p, user, /usercourses/create, POST
+p, admin, /usercourses/:id, GET
+p, user, /usercourses/:id, GET
+p, admin, /usercourses/update/:id, PUT
+p, admin, /usercourses/delete/:id, DELETE
+p, admin, /usercourses/list, GET
+p, user, /usercourses/list, GET
 

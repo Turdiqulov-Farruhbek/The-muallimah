@@ -3,9 +3,7 @@ package http
 import (
 	_ "muallimah-gateway/docs"
 	"muallimah-gateway/internal/http/handlers"
-	"muallimah-gateway/internal/http/middlerware"
 
-	"github.com/casbin/casbin/v2"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -31,18 +29,18 @@ func NewGin(h *handlers.Handler) *gin.Engine {
 		AllowCredentials: true,
 	}))
 
-	enforcer, err := casbin.NewEnforcer("./internal/http/casbin/model.conf", "./internal/http/casbin/policy.csv")
-	if err != nil {
-		panic(err)
-	}
-	router.Use(middlerware.NewAuth(enforcer))
+	// enforcer, err := casbin.NewEnforcer("./internal/http/casbin/model.conf", "./internal/http/casbin/policy.csv")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// router.Use(middlerware.NewAuth(enforcer))
 
 	materials := router.Group("/materials")
 	{
 		materials.POST("/create", h.CreateMaterial)
 		materials.GET("/:id", h.GetMaterial)
-		materials.PUT("/update/:id", h.UpdateMaterial)
-		materials.DELETE("/delete/:id", h.DeleteMaterial)
+		materials.PUT("/:id", h.UpdateMaterial)
+		materials.DELETE("/:id", h.DeleteMaterial)
 		materials.GET("/list", h.ListMaterials)
 	}
 
@@ -53,16 +51,14 @@ func NewGin(h *handlers.Handler) *gin.Engine {
 		books.PUT("/update/:id", h.UpdateBook)
 		books.DELETE("/delete/:id", h.DeleteBook)
 		books.GET("/list", h.ListBooks)
-		books.GET("/picture/delete", h.DeletePicture)
-		books.GET("/picture/add", h.AddPicture)
 	}
 
 	categories := router.Group("/categories")
 	{
 		categories.POST("/create", h.CreateCategory)
 		categories.GET("/:id", h.GetCategory)
-		categories.PUT("/update/:id", h.UpdateCategory)
-		categories.DELETE("/delete/:id", h.DeleteCategory)
+		categories.PUT("/:id", h.UpdateCategory)
+		categories.DELETE("/:id", h.DeleteCategory)
 		categories.GET("/list", h.ListCategories)
 	}
 
@@ -70,8 +66,8 @@ func NewGin(h *handlers.Handler) *gin.Engine {
 	{
 		certificates.POST("/create", h.CreateCertificate)
 		certificates.GET("/:id", h.GetCertificate)
-		certificates.PUT("/update/:id", h.UpdateCertificate)
-		certificates.DELETE("/delete/:id", h.DeleteCertificate)
+		certificates.PUT("/:id", h.UpdateCertificate)
+		certificates.DELETE("/:id", h.DeleteCertificate)
 		certificates.GET("/list", h.ListCertificates)
 	}
 
@@ -96,8 +92,8 @@ func NewGin(h *handlers.Handler) *gin.Engine {
 	{
 		lessons.POST("/create", h.CreateLesson)
 		lessons.GET("/:id", h.GetLesson)
-		lessons.PUT("/update/:id", h.UpdateLesson)
-		lessons.DELETE("/delete/:id", h.DeleteLesson)
+		lessons.PUT("/:id", h.UpdateLesson)
+		lessons.DELETE("/:id", h.DeleteLesson)
 		lessons.GET("/list", h.ListLessons)
 	}
 
@@ -127,8 +123,8 @@ func NewGin(h *handlers.Handler) *gin.Engine {
 		posts.PUT("/update/:id", h.UpdatePost)
 		posts.DELETE("/delete/:id", h.DeletePost)
 		posts.GET("/list", h.GetPosts)
-		posts.POST("/picture/add", h.AddPicturePost)
-		posts.POST("/picture/delete", h.DeletePicturePost)
+		posts.POST("/pictures/add", h.AddPicturePost)
+		posts.POST("/pictures/delete", h.DeletePicturePost)
 	}
 
 	products := router.Group("/products")
@@ -138,8 +134,8 @@ func NewGin(h *handlers.Handler) *gin.Engine {
 		products.PUT("/update/:id", h.UpdateProduct)
 		products.DELETE("/delete/:id", h.DeleteProduct)
 		products.GET("/list", h.ListProducts)
-		products.POST("/picture/add", h.AddPictureProduct)
-		products.POST("/picture/delete", h.DeletePictureProduct)
+		products.POST("/pictures/add", h.AddPictureProduct)
+		products.POST("/pictures/delete", h.DeletePictureProduct)
 	}
 
 	transactions := router.Group("/transactions")
@@ -166,20 +162,6 @@ func NewGin(h *handlers.Handler) *gin.Engine {
 		usercourses.PUT("/update/:id", h.UpdateUserCourse)
 		usercourses.DELETE("/delete/:id", h.DeleteUserCourse)
 		usercourses.GET("/list", h.ListUserCourses)
-	}
-
-	users := router.Group("/users")
-	{
-		users.POST("/create", h.CreateUser)
-		users.GET("/:id", h.GetUserByID)
-		users.GET("/by-email", h.GetUserByEmail)
-		users.PUT("/:id", h.UpdateUser)
-		users.POST("/change-password", h.ChangeUserPassword)
-		users.POST("/change-photo", h.ChangeUserPFP)
-		users.GET("/email-exists", h.IsEmailExists)
-		users.POST("/confirm", h.ConfirmUser)
-		users.DELETE("/:id", h.DeleteUser)
-		users.GET("/", h.ListUsers)
 	}
 
 	return router

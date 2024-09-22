@@ -24,3 +24,8 @@ proto-gen:
 	
 swag-gen:
 	~/go/bin/swag init -g ./internal/http/api.go -o docs force 1	
+
+git:
+	git add .
+	git commit -m "update"
+	git push -u origin mubina

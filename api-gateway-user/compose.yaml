@@ -7,12 +7,12 @@ services:
     ports:
       - "5050:5050"
     networks:
-      - Mynet
+      - muallimah
     environment:
       - KAFKA_BROKER=kafka:9092      
 
 networks:
-  Mynet:
+  muallimah:
       external: true
-      name: financer
+      name: muallimah
       driver: bridge   

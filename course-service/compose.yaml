@@ -15,12 +15,12 @@ services:
       MINIO_CONSOLE_ADDRESS: ':9001'
     command: minio server /data
     networks:
-      - GLhost
+      - muallimah
 
   migrate:
     image: migrate/migrate
     networks:
-      - GLhost
+      - muallimah
     volumes:
       - ./migrations:/migrations
     command: [ "-path", "/migrations", "-database",   
@@ -31,19 +31,19 @@ services:
    
 
   postgres-db:
-    container_name: muallimah_db #post
+    container_name: muallimah_db
     image: postgres:latest
     environment:
       PGUSER: postgres
       POSTGRES_PASSWORD: 00salom00
       PGDATA: /data/postgres
-      POSTGRES_DB: muallimah_db 
+      POSTGRES_DB: muallimah_db
     volumes:
       - db:/muallimah-database/muallimah-memory
     ports:
       - "5437:5432"
     networks:
-      - GLhost
+      - muallimah
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d postgres"]
@@ -61,7 +61,7 @@ services:
     ports:
       - 22181:2181
     networks:
-      - GLhost
+      - muallimah
 
   kafka:
     image: confluentinc/cp-kafka:7.4.4
@@ -71,7 +71,7 @@ services:
     ports:
       - 29092:9092
     networks:
-      - GLhost
+      - muallimah
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper_muallimah:2181
@@ -79,7 +79,6 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  
 
   course_service:
     container_name: muallimah_course
@@ -91,13 +90,13 @@ services:
     ports:
       - "50052:50052"
     networks:
-      - GLhost    
+      - muallimah    
 volumes:
   minio:
   db:
 # Docker Networks
 networks:
-  GLhost:
+  muallimah:
     external: true
     name: muallimah
-    driver: bridge    
+    driver: bridge

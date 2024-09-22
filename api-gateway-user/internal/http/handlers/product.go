@@ -51,7 +51,7 @@ func (h *Handler) CreateProduct(c *gin.Context) {
 // @Success 		200  {string}  string "Product updated successfully"
 // @Failure 		400  {string}  string "Invalid request"
 // @Failure 		500  {string}  string "Internal server error"
-// @Router 			/products/update/{id} [put]
+// @Router 			/products/{id} [put]
 func (h *Handler) UpdateProduct(c *gin.Context) {
 	productID := c.Param("id")
 
@@ -88,7 +88,7 @@ func (h *Handler) UpdateProduct(c *gin.Context) {
 // @Failure 		400  {string}  string "Invalid request"
 // @Failure 		404  {string}  string "Product not found"
 // @Failure 		500  {string}  string "Internal server error"
-// @Router 			/products/delete/{id} [delete]
+// @Router 			/products/{id} [delete]
 func (h *Handler) DeleteProduct(c *gin.Context) {
 	productID := c.Param("id")
 
@@ -198,7 +198,7 @@ func (h *Handler) ListProducts(c *gin.Context) {
 // @Success 		200  {string}  string "Picture added successfully"
 // @Failure 		400  {string}  string "Invalid request"
 // @Failure 		500  {string}  string "Internal server error"
-// @Router 			/products/picture/add [post]
+// @Router 			/products/pictures/add [post]
 func (h *Handler) AddPictureProduct(c *gin.Context) {
 	var req pb.ProductPicture
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -228,7 +228,7 @@ func (h *Handler) AddPictureProduct(c *gin.Context) {
 // @Success 		200  {string}  string "Picture deleted successfully"
 // @Failure 		400  {string}  string "Invalid request"
 // @Failure 		500  {string}  string "Internal server error"
-// @Router 			/products/picture/delete [post]
+// @Router 			/products/pictures/delete [post]
 func (h *Handler) DeletePictureProduct(c *gin.Context) {
 	var req pb.ProductPicture
 	if err := c.ShouldBindJSON(&req); err != nil {

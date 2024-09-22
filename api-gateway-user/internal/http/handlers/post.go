@@ -78,7 +78,7 @@ func (h *Handler) GetPost(c *gin.Context) {
 // @Success 200 {string} string "Post updated successfully"
 // @Failure 400 {string} string "Invalid request"
 // @Failure 500 {string} string "Internal server error"
-// @Router /posts/update/{id} [put]
+// @Router /posts/{id} [put]
 func (h *Handler) UpdatePost(c *gin.Context) {
 	postID := c.Param("id")
 
@@ -116,7 +116,7 @@ func (h *Handler) UpdatePost(c *gin.Context) {
 // @Failure 400 {string} string "Invalid request"
 // @Failure 404 {string} string "Post not found"
 // @Failure 500 {string} string "Internal server error"
-// @Router /posts/delete/{id} [delete]
+// @Router /posts/{id} [delete]
 func (h *Handler) DeletePost(c *gin.Context) {
 	postID := c.Param("id")
 
@@ -145,42 +145,30 @@ func (h *Handler) DeletePost(c *gin.Context) {
 // @Failure 500 {string} string "Internal server error"
 // @Router /posts/list [get]
 func (h *Handler) GetPosts(c *gin.Context) {
-	var req pb.Pagination
+	var filter pb.Pagination
 
 	if limit := c.Query("limit"); limit != "" {
 		if l, err := strconv.Atoi(limit); err == nil {
-			req.Limit = int64(l)
-		}
-	}
-	if offset := c.Query("offset"); offset != "" {
-		if o, err := strconv.Atoi(offset); err == nil {
-			req.Offset = int64(o)
+			filter.Limit = int64(l)
 		}
 	}
 
-	// Open a stream to get the posts
-	stream, err := h.Clients.Post.GetPosts(context.Background(), &req)
+	if offset := c.Query("offset"); offset != "" {
+		if o, err := strconv.Atoi(offset); err == nil {
+			filter.Offset = int64(o)
+		}
+	}
+
+	res, err := h.Clients.Post.GetPosts(context.Background(), &filter)
 	if err != nil {
-		h.Logger.ERROR.Println("Failed to get posts:", err)
+		h.Logger.ERROR.Println("Failed to list books:", err)
 		c.JSON(500, "Internal server error: "+err.Error())
 		return
 	}
 
-	var posts []*pb.PostGet
-	for {
-		// Receive PostList from the stream
-		postList, err := stream.Recv()
-		if err != nil {
-			break
-		}
-
-		// Append all posts from the PostList to the posts slice
-		posts = append(posts, postList.Posts...)
-	}
-
-	// Return the collected posts as JSON
-	c.JSON(200, posts)
+	c.JSON(200, res)
 }
+
 
 
 

@@ -1,32 +1,43 @@
-[ERROR]  2024/09/04 15:53:36 user.go:42: Failed to create user: rpc error: code = Unavailable desc = dns: A record lookup error: lookup auth_service on 127.0.0.53:53: server misbehaving
-[ERROR]  2024/09/04 15:55:07 order.go:34: Failed to create order: rpc error: code = Unavailable desc = dns: A record lookup error: lookup q on 127.0.0.53:53: server misbehaving
-[ERROR]  2024/09/04 15:56:41 order.go:34: Failed to create order: rpc error: code = Unavailable desc = dns: A record lookup error: lookup q on 127.0.0.53:53: server misbehaving
-[ERROR]  2024/09/04 15:59:41 order.go:34: Failed to create order: rpc error: code = Unavailable desc = dns: A record lookup error: lookup q on 127.0.0.53:53: server misbehaving
-[ERROR]  2024/09/04 16:00:24 order.go:34: Failed to create order: rpc error: code = Unknown desc = pq: invalid input syntax for type uuid: "66cef94759df1ab2e243f742"
-[ERROR]  2024/09/04 16:01:33 order.go:34: Failed to create order: rpc error: code = Unknown desc = pq: invalid input syntax for type numeric: "string"
-[ERROR]  2024/09/04 16:01:45 order.go:34: Failed to create order: rpc error: code = Unknown desc = pq: insert or update on table "orders" violates foreign key constraint "orders_user_id_fkey"
-[ERROR]  2024/09/04 16:12:56 order.go:71: Failed to update order: rpc error: code = Unknown desc = pq: column "updated_at" of relation "orders" does not exist
-[ERROR]  2024/09/04 16:13:47 order.go:142: Failed to list orders: rpc error: code = Unknown desc = pq: syntax error at or near "WHERE"
-[ERROR]  2024/09/04 16:14:07 order.go:142: Failed to list orders: rpc error: code = Unknown desc = pq: column "course_id" does not exist
-[ERROR]  2024/09/04 16:15:16 order.go:99: Failed to get order: rpc error: code = Unknown desc = pq: invalid input syntax for type uuid: "66cc67c85958ee939c66071f"
-[ERROR]  2024/09/04 16:15:28 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
-[ERROR]  2024/09/04 16:18:25 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
-[ERROR]  2024/09/04 16:21:33 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
-[ERROR]  2024/09/04 16:24:20 order.go:99: Failed to get order: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50051: connect: connection refused"
-[ERROR]  2024/09/04 16:25:43 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
-[ERROR]  2024/09/04 16:25:43 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
-[ERROR]  2024/09/04 16:26:09 order.go:99: Failed to get order: rpc error: code = Unknown desc = sql: no rows in result set
-[ERROR]  2024/09/04 16:26:18 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
-[ERROR]  2024/09/04 16:32:21 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
-[ERROR]  2024/09/04 16:34:15 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
-[ERROR]  2024/09/04 16:35:46 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: the Find operation must have a Deployment set before Execute can be called
-[ERROR]  2024/09/04 16:37:12 order.go:99: Failed to get order: rpc error: code = Unknown desc = MongoDB client is not connected: the Command operation must have a Deployment set before Execute can be called
-[ERROR]  2024/09/04 16:38:32 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: mongo: no documents in result
-[ERROR]  2024/09/04 16:40:37 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: mongo: no documents in result
-[ERROR]  2024/09/04 16:41:17 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to fetch book details: mongo: no documents in result
-[ERROR]  2024/09/04 16:43:17 order.go:99: Failed to get order: rpc error: code = Unknown desc = no book found with ID 66cc67c85958ee939c66071f
-[ERROR]  2024/09/04 16:44:00 order.go:99: Failed to get order: rpc error: code = Unknown desc = no book found with ID 66d845edefad9044d4ddda5e
-[ERROR]  2024/09/04 16:46:54 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to update order in PostgreSQL: pq: numeric field overflow
-[ERROR]  2024/09/04 16:47:36 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to update order in PostgreSQL: pq: numeric field overflow
-[ERROR]  2024/09/04 16:48:23 order.go:99: Failed to get order: rpc error: code = Unknown desc = failed to update order in PostgreSQL: pq: numeric field overflow
-[ERROR]  2024/09/04 17:11:25 order.go:142: Failed to list orders: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50051: connect: connection refused"
+[ERROR]  2024/09/04 13:59:07 book.go:34: Failed to create book: rpc error: code = Unavailable desc = dns: A record lookup error: lookup q on 127.0.0.53:53: server misbehaving
+[ERROR]  2024/09/04 14:00:35 book.go:34: Failed to create book: rpc error: code = Unavailable desc = dns: A record lookup error: lookup q on 127.0.0.53:53: server misbehaving
+[ERROR]  2024/09/04 14:00:53 categorey.go:34: Failed to create category: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50050: connect: connection refused"
+[ERROR]  2024/09/04 14:01:06 categorey.go:34: Failed to create category: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50050: connect: connection refused"
+[ERROR]  2024/09/04 14:01:08 categorey.go:34: Failed to create category: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50050: connect: connection refused"
+[ERROR]  2024/09/04 14:03:56 course.go:162: Failed to list courses: rpc error: code = Unavailable desc = error reading from server: EOF
+[ERROR]  2024/09/04 14:05:48 course.go:162: Failed to list courses: rpc error: code = Unavailable desc = error reading from server: EOF
+[ERROR]  2024/09/04 14:08:48 course.go:58: Failed to get course: rpc error: code = Unavailable desc = error reading from server: EOF
+[ERROR]  2024/09/04 14:12:39 lesson.go:99: Failed to update lesson: rpc error: code = Unknown desc = at least one field should be updated
+[ERROR]  2024/09/04 14:12:51 lesson.go:99: Failed to update lesson: rpc error: code = Unknown desc = pq: syntax error at or near "$"
+[ERROR]  2024/09/04 14:14:15 lesson.go:99: Failed to update lesson: rpc error: code = Unknown desc = pq: syntax error at or near ","
+[ERROR]  2024/09/04 14:14:31 lesson.go:99: Failed to update lesson: rpc error: code = Unknown desc = pq: syntax error at or near "$"
+[ERROR]  2024/09/04 14:15:47 lesson.go:127: Failed to delete lesson: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50050: connect: connection refused"
+[ERROR]  2024/09/04 14:19:38 additional_materials.go:142: Failed to list materials: rpc error: code = Unknown desc = pq: invalid input syntax for type uuid: ""
+[ERROR]  2024/09/04 16:39:53 users_course.go:171: Failed to list user courses: rpc error: code = Unknown desc = pq: column uc.deleted_at does not exist
+[ERROR]  2024/09/04 16:41:50 users_course.go:171: Failed to list user courses: rpc error: code = Unknown desc = pq: column uc.created_at does not exist
+[ERROR]  2024/09/04 16:41:51 users_course.go:171: Failed to list user courses: rpc error: code = Unknown desc = pq: column uc.created_at does not exist
+[ERROR]  2024/09/04 16:41:52 users_course.go:171: Failed to list user courses: rpc error: code = Unknown desc = pq: column uc.created_at does not exist
+[ERROR]  2024/09/04 16:46:53 users_course.go:171: Failed to list user courses: rpc error: code = Unavailable desc = error reading from server: EOF
+[ERROR]  2024/09/04 16:46:55 users_course.go:171: Failed to list user courses: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50050: connect: connection refused"
+[ERROR]  2024/09/04 16:52:36 users_course.go:171: Failed to list user courses: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50052: connect: connection refused"
+[ERROR]  2024/09/04 16:52:38 users_course.go:171: Failed to list user courses: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50052: connect: connection refused"
+[ERROR]  2024/09/04 16:52:39 users_course.go:171: Failed to list user courses: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50052: connect: connection refused"
+[ERROR]  2024/09/04 16:52:58 users_course.go:171: Failed to list user courses: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50052: connect: connection refused"
+[ERROR]  2024/09/04 16:53:00 users_course.go:171: Failed to list user courses: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50052: connect: connection refused"
+[ERROR]  2024/09/04 16:53:54 users_course.go:171: Failed to list user courses: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50052: connect: connection refused"
+[ERROR]  2024/09/04 16:53:56 users_course.go:171: Failed to list user courses: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50052: connect: connection refused"
+[ERROR]  2024/09/04 16:53:57 users_course.go:171: Failed to list user courses: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50052: connect: connection refused"
+[ERROR]  2024/09/04 16:54:03 users_course.go:171: Failed to list user courses: rpc error: code = Unknown desc = sql: Scan error on column index 2, name "end_date": converting NULL to string is unsupported
+[ERROR]  2024/09/04 16:57:24 users_course.go:60: Failed to get user course: rpc error: code = Unavailable desc = error reading from server: EOF
+[ERROR]  2024/09/04 16:57:59 users_course.go:60: Failed to get user course: rpc error: code = Unknown desc = pq: column uc.deleted_at does not exist
+[ERROR]  2024/09/04 17:18:27 users_course.go:32: Failed to enroll user in course: rpc error: code = Unknown desc = pq: invalid input value for enum progress_status_type: "started"
+[ERROR]  2024/09/04 17:26:24 users_course.go:32: Failed to enroll user in course: rpc error: code = Unknown desc = pq: invalid input value for enum progress_status_type: "started"
+[ERROR]  2024/09/04 18:12:17 users_course.go:104: Failed to update user course: rpc error: code = Unknown desc = pq: syntax error at or near "$"
+[ERROR]  2024/09/04 18:13:10 users_course.go:132: Failed to delete user course: rpc error: code = Unknown desc = pq: column "deleted_at" does not exist
+[ERROR]  2024/09/04 18:13:36 users_course.go:132: Failed to delete user course: rpc error: code = Unknown desc = pq: column "deleted_at" does not exist
+[ERROR]  2024/09/04 18:14:04 users_course.go:132: Failed to delete user course: rpc error: code = Unknown desc = pq: got 2 parameters but the statement requires 1
+[ERROR]  2024/09/04 18:16:49 user_lesson.go:163: Failed to list user lessons: rpc error: code = Unknown desc = pq: column "created_at" does not exist
+[ERROR]  2024/09/04 18:17:29 user_lesson.go:163: Failed to list user lessons: rpc error: code = Unavailable desc = error reading from server: EOF
+[ERROR]  2024/09/04 18:34:50 user_lesson.go:163: Failed to list user lessons: rpc error: code = Unknown desc = sql: Scan error on column index 7, name "user_course_end_date": converting NULL to string is unsupported
+[ERROR]  2024/09/04 18:50:28 user_lesson.go:163: Failed to list user lessons: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:50052: connect: connection refused"
+[ERROR]  2024/09/04 18:53:06 user_lesson.go:61: Failed to get user lesson: rpc error: code = Unknown desc = sql: Scan error on column index 7, name "user_course_end_date": converting NULL to string is unsupported
+[ERROR]  2024/09/04 18:56:05 user_lesson.go:61: Failed to get user lesson: rpc error: code = Unknown desc = sql: Scan error on column index 7, name "end_date": converting NULL to string is unsupported

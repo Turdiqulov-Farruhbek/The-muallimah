@@ -1770,7 +1770,8 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Lesson ID",
                         "name": "lesson_id",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "integer",
@@ -2328,61 +2329,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/orders/delete/{id}": {
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Delete an order by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Order"
-                ],
-                "summary": "Delete Order",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Order deleted successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Order not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/orders/list": {
             "get": {
                 "security": [
@@ -2426,64 +2372,6 @@ const docTemplate = `{
                         "description": "List of orders",
                         "schema": {
                             "$ref": "#/definitions/genproto.OrderListsRes"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/orders/update/{id}": {
-            "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Update an existing order",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Order"
-                ],
-                "summary": "Update Order",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Order data",
-                        "name": "order",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/genproto.OrderUpt"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Order updated successfully",
-                        "schema": {
-                            "type": "string"
                         }
                     },
                     "400": {
@@ -2554,6 +2442,115 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update an existing order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Update Order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Order data",
+                        "name": "order",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genproto.OrderUpt"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order updated successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete an order by its ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Delete Order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         },
         "/posts/create": {
@@ -2594,61 +2591,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/posts/delete/{id}": {
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Delete a post by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Post"
-                ],
-                "summary": "Delete Post",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Post ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Post deleted successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Post not found",
                         "schema": {
                             "type": "string"
                         }
@@ -2818,7 +2760,60 @@ const docTemplate = `{
                 }
             }
         },
-        "/posts/update/{id}": {
+        "/posts/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve a post by its ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Get Post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Post ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post details",
+                        "schema": {
+                            "$ref": "#/definitions/genproto.PostGet"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Post not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "put": {
                 "security": [
                     {
@@ -2874,16 +2869,14 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/posts/{id}": {
-            "get": {
+            },
+            "delete": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve a post by its ID",
+                "description": "Delete a post by its ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -2893,7 +2886,7 @@ const docTemplate = `{
                 "tags": [
                     "Post"
                 ],
-                "summary": "Get Post",
+                "summary": "Delete Post",
                 "parameters": [
                     {
                         "type": "string",
@@ -2905,9 +2898,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Post details",
+                        "description": "Post deleted successfully",
                         "schema": {
-                            "$ref": "#/definitions/genproto.PostGet"
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -2969,61 +2962,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/products/delete/{id}": {
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Delete a product by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Delete Product",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Product ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Product deleted successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Product not found",
                         "schema": {
                             "type": "string"
                         }
@@ -3109,7 +3047,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/products/picture/add": {
+        "/products/pictures/add": {
             "post": {
                 "security": [
                     {
@@ -3160,7 +3098,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/products/picture/delete": {
+        "/products/pictures/delete": {
             "post": {
                 "security": [
                     {
@@ -3211,7 +3149,60 @@ const docTemplate = `{
                 }
             }
         },
-        "/products/update/{id}": {
+        "/products/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve a product by its ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product details",
+                        "schema": {
+                            "$ref": "#/definitions/genproto.ProductGet"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "put": {
                 "security": [
                     {
@@ -3267,16 +3258,14 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/products/{id}": {
-            "get": {
+            },
+            "delete": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve a product by its ID",
+                "description": "Delete a product by its ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -3286,7 +3275,7 @@ const docTemplate = `{
                 "tags": [
                     "Product"
                 ],
-                "summary": "Get Product",
+                "summary": "Delete Product",
                 "parameters": [
                     {
                         "type": "string",
@@ -3298,9 +3287,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Product details",
+                        "description": "Product deleted successfully",
                         "schema": {
-                            "$ref": "#/definitions/genproto.ProductGet"
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -3575,70 +3564,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user-courses": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "List all user courses with optional filters and pagination",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "UserCourse"
-                ],
-                "summary": "List User Courses",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "user_id",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "List of user courses",
-                        "schema": {
-                            "$ref": "#/definitions/genproto.UserCourseListsRes"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error\"“",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/user-courses/enroll": {
+        "/usercourses/create": {
             "post": {
                 "security": [
                     {
@@ -3689,14 +3615,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/user-courses/{id}": {
-            "get": {
+        "/usercourses/delete/{id}": {
+            "delete": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve a user course by its ID",
+                "description": "Delete a user course by its ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -3706,7 +3632,7 @@ const docTemplate = `{
                 "tags": [
                     "UserCourse"
                 ],
-                "summary": "Get User Course",
+                "summary": "Delete User Course",
                 "parameters": [
                     {
                         "type": "string",
@@ -3718,19 +3644,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "User course details",
-                        "schema": {
-                            "$ref": "#/definitions/genproto.UserCourse"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
+                        "description": "User course deleted successfully",
                         "schema": {
                             "type": "string"
                         }
                     },
-                    "404": {
-                        "description": "User course not found",
+                    "400": {
+                        "description": "Invalid request",
                         "schema": {
                             "type": "string"
                         }
@@ -3742,7 +3662,69 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/usercourses/list": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List all user courses with optional filters and pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserCourse"
+                ],
+                "summary": "List User Courses",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of user courses",
+                        "schema": {
+                            "$ref": "#/definitions/genproto.UserCourseListsRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error\"“",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/usercourses/update/{id}": {
             "put": {
                 "security": [
                     {
@@ -3798,14 +3780,16 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "delete": {
+            }
+        },
+        "/usercourses/{id}": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Delete a user course by its ID",
+                "description": "Retrieve a user course by its ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -3815,7 +3799,7 @@ const docTemplate = `{
                 "tags": [
                     "UserCourse"
                 ],
-                "summary": "Delete User Course",
+                "summary": "Get User Course",
                 "parameters": [
                     {
                         "type": "string",
@@ -3827,13 +3811,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "User course deleted successfully",
+                        "description": "User course details",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/genproto.UserCourse"
                         }
                     },
                     "400": {
                         "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "User course not found",
                         "schema": {
                             "type": "string"
                         }
@@ -3847,7 +3837,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user-lessons/create": {
+        "/userlessons/create": {
             "post": {
                 "security": [
                     {
@@ -3898,7 +3888,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user-lessons/delete/{id}": {
+        "/userlessons/delete/{id}": {
             "delete": {
                 "security": [
                     {
@@ -3947,7 +3937,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user-lessons/list": {
+        "/userlessons/list": {
             "get": {
                 "security": [
                     {
@@ -4007,7 +3997,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user-lessons/update/{id}": {
+        "/userlessons/update/{id}": {
             "put": {
                 "security": [
                     {
@@ -4039,7 +4029,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/genproto.UserLessonUpdateReq"
+                            "$ref": "#/definitions/genproto.UserUptbody"
                         }
                     }
                 ],
@@ -4065,7 +4055,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user-lessons/{id}": {
+        "/userlessons/{id}": {
             "get": {
                 "security": [
                     {
@@ -4107,585 +4097,6 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "User Lesson not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/users": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "List all users with optional filters and pagination",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "List Users",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "First name",
-                        "name": "first_name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Last name",
-                        "name": "last_name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Date of birth from",
-                        "name": "dob_from",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Date of birth to",
-                        "name": "dob_to",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Phone number",
-                        "name": "phone_number",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Email",
-                        "name": "email",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Occupation",
-                        "name": "occupation",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Address",
-                        "name": "address",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Gender",
-                        "name": "gender",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Pagination limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Pagination offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "List of users",
-                        "schema": {
-                            "$ref": "#/definitions/genproto.UsersGetAllRes"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/by-email": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Retrieve a user by their email",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Get User by Email",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User email",
-                        "name": "email",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User details",
-                        "schema": {
-                            "$ref": "#/definitions/genproto.UserGetRes"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "User not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/change-password": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Change the password for a user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Change User Password",
-                "parameters": [
-                    {
-                        "description": "User email and new password",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/genproto.UserRecoverPasswordReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Password changed successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/change-photo": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Update the profile picture of a user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Change User Profile Picture",
-                "parameters": [
-                    {
-                        "description": "User photo URL",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/genproto.UserCreatePFPReqForSwagger"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Profile picture updated successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/confirm": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Confirm the email address of a user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Confirm User Email",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User email",
-                        "name": "email",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Confirmation code",
-                        "name": "code",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User email confirmed successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/create": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Create a new user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Create User",
-                "parameters": [
-                    {
-                        "description": "User data",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/genproto.UserCreateReqForSwagger"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User created successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/email-exists": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Check if the provided email already exists",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Check Email Exists",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Email address",
-                        "name": "email",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Email existence status",
-                        "schema": {
-                            "$ref": "#/definitions/genproto.UserEmailCheckRes"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Retrieve a user by their ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Get User by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User details",
-                        "schema": {
-                            "$ref": "#/definitions/genproto.UserGetRes"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "User not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Update an existing user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Update User",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "User data",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/genproto.UserUpdateReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User updated successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Delete a user by their ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Delete User",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User deleted successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
                         "schema": {
                             "type": "string"
                         }
@@ -5637,54 +5048,6 @@ const docTemplate = `{
                 }
             }
         },
-        "genproto.UserCreatePFPReqForSwagger": {
-            "type": "object",
-            "properties": {
-                "photo_url": {
-                    "type": "string"
-                }
-            }
-        },
-        "genproto.UserCreateReqForSwagger": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "dob": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "occupation": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "phone_number": {
-                    "type": "string"
-                }
-            }
-        },
-        "genproto.UserEmailCheckRes": {
-            "type": "object",
-            "properties": {
-                "exists": {
-                    "type": "boolean"
-                }
-            }
-        },
         "genproto.UserGetRes": {
             "type": "object",
             "properties": {
@@ -5772,68 +5135,6 @@ const docTemplate = `{
                 }
             }
         },
-        "genproto.UserLessonUpdateReq": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "$ref": "#/definitions/genproto.UserUptbody"
-                },
-                "id": {
-                    "type": "string"
-                }
-            }
-        },
-        "genproto.UserRecoverPasswordReq": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "new_password": {
-                    "type": "string"
-                }
-            }
-        },
-        "genproto.UserUpdate": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "dob": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "occupation": {
-                    "type": "string"
-                },
-                "phone_number": {
-                    "type": "string"
-                }
-            }
-        },
-        "genproto.UserUpdateReq": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "$ref": "#/definitions/genproto.UserUpdate"
-                },
-                "id": {
-                    "type": "string"
-                }
-            }
-        },
         "genproto.UserUpt": {
             "type": "object",
             "properties": {
@@ -5853,20 +5154,6 @@ const docTemplate = `{
             "properties": {
                 "status": {
                     "type": "string"
-                }
-            }
-        },
-        "genproto.UsersGetAllRes": {
-            "type": "object",
-            "properties": {
-                "pagination": {
-                    "$ref": "#/definitions/genproto.Pagination"
-                },
-                "users": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/genproto.UserGetRes"
-                    }
                 }
             }
         },
