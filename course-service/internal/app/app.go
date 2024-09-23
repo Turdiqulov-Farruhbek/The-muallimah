@@ -50,6 +50,7 @@ func Run(cf *config.Config) {
 	if err != nil {
 		log.Fatal("Failed to listen: ", err)
 	}
+	
 	// set grpc server
 	server := grpc.NewServer()
 	pb.RegisterCategoryServiceServer(server, service.NewCategoryService(db))
