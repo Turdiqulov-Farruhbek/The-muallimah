@@ -2,6 +2,7 @@ package storage
 
 import pb "gitlab.com/muallimah/course_service/internal/pkg/genproto"
 
+
 type StorageI interface {
 	Category() CategoryI
 	Certificate() CertificateI
