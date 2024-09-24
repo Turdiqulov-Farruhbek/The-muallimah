@@ -170,6 +170,7 @@ func (r *BookRepo) ListBooks(ctx context.Context, book *entity.BookFilter) (*ent
 	}, nil
 }
 
+
 func (r *BookRepo) GetBook(ctx context.Context, bookID string) (*entity.BookGet, error) {
 	var books entity.BookGet
 	obj_id, err := primitive.ObjectIDFromHex(bookID)
@@ -207,6 +208,7 @@ func (r *BookRepo) GetBook(ctx context.Context, bookID string) (*entity.BookGet,
 	return &books, nil
 
 }
+
 
 func (r *BookRepo) AddPicture(ctx context.Context, picture *entity.BookPicture) error {
 
