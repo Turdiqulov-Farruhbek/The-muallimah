@@ -18,9 +18,11 @@ const (
 	bookCollectionName = "books"
 )
 
+
 type BookRepo struct {
 	col *mongo.Collection
 }
+
 
 func NewBookManager(db *mongo.Database) repository.Books {
 	return &BookRepo{
