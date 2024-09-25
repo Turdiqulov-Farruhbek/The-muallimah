@@ -20,15 +20,15 @@ func NewCourseRepo(db *sql.DB) *CourseRepo {
 
 func (r *CourseRepo) CreateCourse(req *pb.CourseCreateReq) error {
 	query := `INSERT INTO courses (
-								id,	
-								name, 
-								description, 
-								price, 
-								image_url, 
-								category_id, 
-								created_at, 
-								updated_at)
-	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
+		id,	
+		name, 
+		description, 
+		price, 
+		image_url, 
+		category_id, 
+		created_at, 
+		updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
 	_, err := r.db.Exec(query,
 		uuid.NewString(),
 		req.Name,
