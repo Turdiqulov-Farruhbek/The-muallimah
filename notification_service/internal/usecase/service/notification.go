@@ -30,6 +30,9 @@ func (s *NotificationService) DeleteNotificcation(ctx context.Context, req *pb.B
 	return s.stg.Notification().DeleteNotificcation(req)
 }
 func (s *NotificationService) UpdateNotificcation(ctx context.Context, req *pb.NotificationUpdate) (*pb.Void, error) {
+	if req.NotificationId == "" || req.NotificationId == "string" || req.NotificationId == " " {
+		return nil, errors.New("invalid request, notification_id is required")
+	}
 	return s.stg.Notification().UpdateNotificcation(req)
 }
 func (s *NotificationService) GetNotifications(ctx context.Context, req *pb.NotifFilter) (*pb.NotificationList, error) {
