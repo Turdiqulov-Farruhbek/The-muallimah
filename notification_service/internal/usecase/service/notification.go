@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	pb "gitlab.com/muallimah/notification_service/internal/pkg/genproto"
 	"gitlab.com/muallimah/notification_service/internal/storage"
@@ -23,6 +24,9 @@ func (s *NotificationService) NotifyAll(ctx context.Context, req *pb.Notificatio
 	return s.stg.Notification().NotifyAll(req)
 }
 func (s *NotificationService) DeleteNotificcation(ctx context.Context, req *pb.ById) (*pb.Void, error) {
+	if req.Id == "" || req.Id == "string" || req.Id == " " {
+		return nil, errors.New("invalid request, id is required")
+	}
 	return s.stg.Notification().DeleteNotificcation(req)
 }
 func (s *NotificationService) UpdateNotificcation(ctx context.Context, req *pb.NotificationUpdate) (*pb.Void, error) {
